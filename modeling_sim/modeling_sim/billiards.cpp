@@ -21,28 +21,29 @@ const double dt = 0.015;  // 単位は[sec]．この値は各自のPCのスペックに合わせて調
 const double table_w = 254; // テーブル横幅 [cm]
 const double table_h = 127; // テーブル縦幅 [cm]
 
-typedef struct {
+class BALL {
+public:
 	double m; // 質量
 	double r; // 半径
 	double e; // 弾性係数
-
+	float col[4]; // 色
 	double pos[3]; // 位置
 	double vel[3]; // 速度
 	double acc[3]; // 加速度
-
-	float col[4]; // 色
-} BALL;
+	void ball_set();
+	void init();
+};
 
 BALL ball;
 
 // ボールの初期設定
-void ball_set() {
+void BALL::ball_set() {
 	ball.pos[0] = 0.0; // x座標 初期位置
 	ball.pos[1] = 0.0; // y座標 初期位置
 	ball.pos[2] = 0.0; // z座標 初期位置
 
-	ball.vel[0] = 1000.0; // x方向 初期速度
-	ball.vel[1] = 1000.0; // y方向 初期速度
+	ball.vel[0] = 100.0; // x方向 初期速度
+	ball.vel[1] = 100.0; // y方向 初期速度
 	ball.vel[2] = 0.0; // z方向 初期速度
 
 	ball.acc[0] = 0.0; // x方向 初期加速度
@@ -64,7 +65,7 @@ void idle() {
 	glutPostRedisplay();
 }
 
-void init() {
+void BALL::init() {
 	// 光源の設定
 	GLfloat lpos0[4] = { 0.0, 100.0, 100.0, 1.0 };
 	GLfloat lcol0[4] = { 1.0, 1.0, 1.0, 1.0 };
@@ -238,7 +239,7 @@ int main(int argc, char *argv[]) {
 	glutInitWindowSize(800, 600);  // ディスプレイ画面の作成
 	glutCreateWindow("simulation");
 
-	ball_set();
+	ball.ball_set();
 
 	// ファイルに出力
 	string filename_output = "output.txt";
@@ -252,7 +253,7 @@ int main(int argc, char *argv[]) {
 	glutReshapeFunc(resize);
 	glutIdleFunc(idle);
 
-	init();
+	ball.init();
 	glutMainLoop();
 
 	return 0;
