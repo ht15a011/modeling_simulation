@@ -32,6 +32,10 @@ public:
 	double acc[3]; // 加速度
 	void ball_set();
 	void init();
+	static void idle();
+	static void resize(int, int);
+	static void keyboard(unsigned char, int, int);
+	static void display();
 };
 
 BALL ball;
@@ -61,7 +65,7 @@ void BALL::ball_set() {
 	ball.e = 1;
 }
 
-void idle() {
+void BALL::idle() {
 	glutPostRedisplay();
 }
 
@@ -84,7 +88,7 @@ void BALL::init() {
 	glEnable(GL_CULL_FACE);
 }
 
-void resize(int w, int h) {
+void BALL::resize(int w, int h) {
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -92,7 +96,7 @@ void resize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void keyboard(unsigned char k, int x, int y) {
+void BALL::keyboard(unsigned char k, int x, int y) {
 	switch (k) {
 	case 'q': // qで終了
 		fout.close();
@@ -103,7 +107,7 @@ void keyboard(unsigned char k, int x, int y) {
 	}
 }
 
-void display() {
+void BALL::display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // 画面をクリアにする
 	glLoadIdentity();
 	gluLookAt(0.0, 0.0, 500.0, // 視点位置（x軸、y軸、z軸）
@@ -248,10 +252,10 @@ int main(int argc, char *argv[]) {
 	cout << fixed << setprecision(3);
 	fout << fixed << setprecision(3);
 
-	glutDisplayFunc(display);
-	glutKeyboardFunc(keyboard);  // キーボードからの入力を受け付ける
-	glutReshapeFunc(resize);
-	glutIdleFunc(idle);
+	glutDisplayFunc(BALL::display);
+	glutKeyboardFunc(BALL::keyboard);  // キーボードからの入力を受け付ける
+	glutReshapeFunc(BALL::resize);
+	glutIdleFunc(BALL::idle);
 
 	ball.init();
 	glutMainLoop();
