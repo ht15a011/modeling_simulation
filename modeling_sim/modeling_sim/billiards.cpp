@@ -12,7 +12,7 @@ using namespace std;
 // グローバル変数
 ofstream fout;
 long int loopcounter = 0;
-const double mu_r = 1;
+const double mu_r = 0.9;
 
 // ループ時間
 const double dt = 0.015;  // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
@@ -22,11 +22,12 @@ const double table_w = 254; // テーブル横幅 [cm]
 const double table_h = 127; // テーブル縦幅 [cm]
 
 class BALL {
-public:
+private:
 	double m; // 質量
 	double r; // 半径
 	double e; // 弾性係数
 	float col[4]; // 色
+public:
 	double pos[3]; // 位置
 	double vel[3]; // 速度
 	double acc[3]; // 加速度
