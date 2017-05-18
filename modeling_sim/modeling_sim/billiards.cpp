@@ -12,7 +12,7 @@ using namespace std;
 // グローバル変数
 ofstream fout;
 long int loopcounter = 0;
-const double mu_r = 0.1;  // 反発係数(0 < mu_r < 1)
+const double mu_r = 0.5;  // 反発係数(0 < mu_r < 1)
 
 // ループ時間
 const double dt = 0.015;  // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
@@ -47,8 +47,8 @@ void BALL::ball_set() {
 	ball.pos[1] = 0.0; // y座標 初期位置
 	ball.pos[2] = 0.0; // z座標 初期位置
 
-	ball.vel[0] = 100.0; // x方向 初期速度
-	ball.vel[1] = 0.0; // y方向 初期速度
+	ball.vel[0] = 1000.0; // x方向 初期速度
+	ball.vel[1] = 1000.0; // y方向 初期速度
 	ball.vel[2] = 0.0; // z方向 初期速度
 
 	ball.acc[0] = 0.0; // x方向 初期加速度
@@ -211,35 +211,22 @@ void BALL::display() {
 
 	fout.flush();
 	loopcounter++;
-	/*
-	// ボールが衝突した時の処理
-	if (ball.pos[0] + ball.r >= table_w / 2) {  // 右の壁に衝突した時の処理
-		ball.vel[0] = -1 * mu_r * ball.vel[0];
-	}
-	if (ball.pos[0] - ball.r <= -table_w / 2) {  // 左の壁に衝突した時の処理
-		ball.vel[0] = -1 * mu_r * ball.vel[0];
-	}
-	if (ball.pos[1] + ball.r >= table_h / 2) {  // 上の壁に衝突した時の処理
-		ball.vel[1] = -1 * mu_r * ball.vel[1];
-	}
-	if (ball.pos[1] - ball.r <= -table_h / 2) {  // 下の壁に衝突した時の処理
-		ball.vel[1] = -1 * mu_r * ball.vel[1];
-	}
-	*/
-	// めり込み解消処理
-	if (ball.pos[0] + ball.r >= table_w / 2) {
+
+	// ボールが壁に衝突した際の処理（めり込み解消処理もしている）
+	if (ball.pos[0] + ball.r >= table_w / 2) {  // 右の壁
 		ball.pos[0] = table_w / 2 - ball.r;
 		ball.vel[0]= -1 * mu_r * ball.vel[0];
 	}
-	if (ball.pos[0] - ball.r <= -table_w / 2) {
+	else if (ball.pos[0] - ball.r <= -table_w / 2) {  // 左の壁
 		ball.pos[0] = -table_w / 2 + ball.r;
 		ball.vel[0] = -1 * mu_r * ball.vel[0];
 	}
-	if (ball.pos[1] + ball.r >= table_h / 2) {
+
+	if (ball.pos[1] + ball.r >= table_h / 2) {  // 上の壁
 		ball.pos[1] = table_h / 2 - ball.r;
 		ball.vel[1] = -1 * mu_r * ball.vel[1];
 	}
-	if (ball.pos[1] - ball.r <= -table_h / 2) {
+	else if (ball.pos[1] - ball.r <= -table_h / 2) {  // 下の壁
 		ball.pos[1] = -table_h / 2 + ball.r;
 		ball.vel[1] = -1 * mu_r * ball.vel[1];
 	}
