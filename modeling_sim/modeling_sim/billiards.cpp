@@ -16,17 +16,19 @@ const double mu_r = 0.5;  // 反発係数(0 < mu_r < 1)
 
 // ループ時間
 const double dt = 0.015;  // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
-
+/*
 						  // ビリヤードのテーブル
-const double table_w = 254; // テーブル横幅 [cm]
-const double table_h = 127; // テーブル縦幅 [cm]
-
+static const double table_w = 254; // テーブル横幅 [cm]
+static const double table_h = 127; // テーブル縦幅 [cm]
+*/
 class BALL {
 private:
 	double m; // 質量
 	double r; // 半径
 	double e; // 弾性係数
 	float col[4]; // 色
+	static const double table_w; // テーブル横幅 [cm]
+	static const double table_h; // テーブル縦幅 [cm]
 public:
 	double pos[3]; // 位置
 	double vel[3]; // 速度
@@ -40,6 +42,9 @@ public:
 };
 
 BALL ball;
+
+const double BALL::table_w = 254;
+const double BALL::table_h = 127;
 
 // ボールの初期設定
 void BALL::ball_set() {
@@ -184,7 +189,7 @@ void BALL::display() {
 
 	double dt_sum = loopcounter*dt;
 
-	// 状態更新・・・画面とファイルに出力
+	// 状態更新・・・画面とファイルに出力(ボールの位置、速度、加速度 ＊xyz方向)
 	cout << setw(8) << dt_sum << " " <<
 		setw(8) << ball.pos[0] << " " <<
 		setw(8) << ball.pos[1] << " " <<
