@@ -13,13 +13,9 @@ using namespace std;
 ofstream fout;
 long int loopcounter = 0;
 const double mu_r = 0.5;  // 反発係数(0 < mu_r < 1)
-
+/*
 // ループ時間
 const double dt = 0.015;  // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
-/*
-						  // ビリヤードのテーブル
-static const double table_w = 254; // テーブル横幅 [cm]
-static const double table_h = 127; // テーブル縦幅 [cm]
 */
 class BALL {
 private:
@@ -27,8 +23,9 @@ private:
 	double r; // 半径
 	double e; // 弾性係数
 	float col[4]; // 色
-	static const double table_w; // テーブル横幅 [cm]
-	static const double table_h; // テーブル縦幅 [cm]
+	static const double table_w; // ビリヤードのテーブル横幅 [cm]
+	static const double table_h; // ビリヤードのテーブル縦幅 [cm]
+	static const double dt;  // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
 public:
 	double pos[3]; // 位置
 	double vel[3]; // 速度
@@ -43,6 +40,8 @@ public:
 
 BALL ball;
 
+// 静的なメンバ変数の作成 ＊ファイル分割する際はcppファイルに書く
+const double BALL::dt = 0.015;
 const double BALL::table_w = 254;
 const double BALL::table_h = 127;
 
