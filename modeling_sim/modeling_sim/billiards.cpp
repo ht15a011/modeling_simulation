@@ -11,12 +11,7 @@ using namespace std;
 
 // グローバル変数
 ofstream fout;
-long int loopcounter = 0;
-const double mu_r = 0.5;  // 反発係数(0 < mu_r < 1)
-/*
-// ループ時間
-const double dt = 0.015;  // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
-*/
+
 class BALL {
 private:
 	double m; // 質量
@@ -26,10 +21,12 @@ private:
 	static const double table_w; // ビリヤードのテーブル横幅 [cm]
 	static const double table_h; // ビリヤードのテーブル縦幅 [cm]
 	static const double dt;  // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
+	static const double mu_r;  // 反発係数(0 < mu_r < 1)
 public:
 	double pos[3]; // 位置
 	double vel[3]; // 速度
 	double acc[3]; // 加速度
+	static long int loopcounter;
 	void ball_set();
 	void init();
 	static void idle();
@@ -41,9 +38,11 @@ public:
 BALL ball;
 
 // 静的なメンバ変数の作成 ＊ファイル分割する際はcppファイルに書く
-const double BALL::dt = 0.015;
+const double BALL::dt = 0.015;  // ループ時間
+const double BALL::mu_r = 0.8;  // 
 const double BALL::table_w = 254;
 const double BALL::table_h = 127;
+long int BALL::loopcounter = 0;
 
 // ボールの初期設定
 void BALL::ball_set() {
