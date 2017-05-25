@@ -14,7 +14,7 @@ BALL ball;
 ofstream fout;
 
 // 静的なメンバ変数の作成 ＊ファイル分割する際はcppファイルに書く
-const double BALL::dt = 0.015;  // ループ時間
+const double BALL::dt = 0.017;  // ループ時間
 const double BALL::mu_r = 0.9;  // 
 const double BALL::table_w = 254;
 const double BALL::table_h = 127;
