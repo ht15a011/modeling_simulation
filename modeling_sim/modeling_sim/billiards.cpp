@@ -39,7 +39,7 @@ BALL ball;
 
 // 静的なメンバ変数の作成 ＊ファイル分割する際はcppファイルに書く
 const double BALL::dt = 0.015;  // ループ時間
-const double BALL::mu_r = 0.8;  // 
+const double BALL::mu_r = 0.9;  // 
 const double BALL::table_w = 254;
 const double BALL::table_h = 127;
 long int BALL::loopcounter = 0;
@@ -50,8 +50,8 @@ void BALL::ball_set() {
 	ball.pos[1] = 0.0; // y座標 初期位置
 	ball.pos[2] = 0.0; // z座標 初期位置
 
-	ball.vel[0] = 1000.0; // x方向 初期速度
-	ball.vel[1] = 1000.0; // y方向 初期速度
+	ball.vel[0] = 100.0; // x方向 初期速度
+	ball.vel[1] = 100.0; // y方向 初期速度
 	ball.vel[2] = 0.0; // z方向 初期速度
 
 	ball.acc[0] = 0.0; // x方向 初期加速度
