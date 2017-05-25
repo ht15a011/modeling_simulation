@@ -7,6 +7,7 @@
 #include "class.h"
 using namespace std;
 
+// グローバル変数
 extern BALL ball;
 extern ofstream fout;
 
@@ -31,8 +32,7 @@ void BALL::ball_set() {
 
 	ball.m = 170; // [g]
 	ball.r = 5.71 / 2; // [cm] 球体の大きさ
-					   //ball.r = 120.71 / 2; // [cm] 球体の大きさ
-	ball.e = 1;
+	ball.e = 1; //ball.r = 120.71 / 2; // [cm] 球体の大きさ
 }
 
 void BALL::idle() {
@@ -66,6 +66,7 @@ void BALL::resize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
+// キーボードからの入力を処理する
 void BALL::keyboard(unsigned char k, int x, int y) {
 	switch (k) {
 	case 'q': // qで終了
@@ -77,6 +78,7 @@ void BALL::keyboard(unsigned char k, int x, int y) {
 	}
 }
 
+// ディスプレイに表示する内容を処理（壁、ボールの位置・速度・加速度など）
 void BALL::display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // 画面をクリアにする
 	glLoadIdentity();

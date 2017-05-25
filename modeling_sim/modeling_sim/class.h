@@ -1,6 +1,7 @@
 #ifndef CLASS_H_
 #define CLASS_H_
 
+// クラス定義部
 class BALL {
 private:
 	double m; // 質量
@@ -11,7 +12,7 @@ private:
 	static const double table_h; // ビリヤードのテーブル縦幅 [cm]
 	static const double dt;  // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
 	static const double mu_r;  // 反発係数(0 < mu_r < 1)
-	static long int loopcounter;
+	static long int loopcounter;  // ループ時間
 public:
 	double pos[3]; // 位置
 	double vel[3]; // 速度
