@@ -14,11 +14,11 @@ BALL ball;
 ofstream fout;
 
 // 静的なメンバ変数の作成 ＊ファイル分割する際はcppファイルに書く
-const double BALL::dt = 0.017;  // ループ時間
-const double BALL::mu_r = 0.9;  // 
-const double BALL::table_w = 254;
-const double BALL::table_h = 127;
-long int BALL::loopcounter = 0;
+const double BALL::dt = 0.017;     // ループ時間
+const double BALL::mu_r = 0.9;     // 反発係数
+const double BALL::table_w = 254;  // ビリヤードのテーブル横幅 [cm]
+const double BALL::table_h = 127;  // ビリヤードのテーブル縦幅 [cm]
+long int BALL::loopcounter = 0;    // ループ時間
 
 int main(int argc, char *argv[]) {
 	// OpenGL初期化
@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
 	// ファイルに出力
 	string filename_output = "output.txt";
 	fout.open(filename_output);
+
 	//出力形式の調整 (小数点以下の3ケタに調整)
 	cout << fixed << setprecision(3);
 	fout << fixed << setprecision(3);

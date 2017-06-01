@@ -14,26 +14,26 @@ extern ofstream fout;
 
 // ボールの初期設定
 void BALL::ball_set() {
-	ball.pos[0] = 0.0; // x座標 初期位置
-	ball.pos[1] = 0.0; // y座標 初期位置
-	ball.pos[2] = 0.0; // z座標 初期位置
+	ball.pos[0] = 0.0;  // x座標 初期位置
+	ball.pos[1] = 0.0;  // y座標 初期位置
+	ball.pos[2] = 0.0;  // z座標 初期位置
 
-	ball.vel[0] = 100.0; // x方向 初期速度
-	ball.vel[1] = 100.0; // y方向 初期速度
-	ball.vel[2] = 0.0; // z方向 初期速度
+	ball.vel[0] = 100.0;  // x方向 初期速度
+	ball.vel[1] = 100.0;  // y方向 初期速度
+	ball.vel[2] = 0.0;    // z方向 初期速度
 
-	ball.acc[0] = 0.0; // x方向 初期加速度
-	ball.acc[1] = 0.0; // y方向 初期加速度
-	ball.acc[2] = 0.0; // z方向 初期加速度
+	ball.acc[0] = 0.0;  // x方向 初期加速度
+	ball.acc[1] = 0.0;  // y方向 初期加速度
+	ball.acc[2] = 0.0;  // z方向 初期加速度
 
-	ball.col[0] = 1.0; // 色 R
-	ball.col[1] = 1.0; // 色 G
-	ball.col[2] = 0.0; // 色 B
-	ball.col[3] = 0.0; // 色 A
+	ball.col[0] = 1.0;  // 色 R
+	ball.col[1] = 1.0;  // 色 G
+	ball.col[2] = 0.0;  // 色 B
+	ball.col[3] = 0.0;  // 色 A
 
-	ball.m = 170; // [g]
-	ball.r = 5.71 / 2; // [cm] 球体の大きさ
-	ball.e = 1; //ball.r = 120.71 / 2; // [cm] 球体の大きさ
+	ball.m = 170;      // [g]
+	ball.r = 5.71 * 5; // ball.r = 120.71 / 2; // [cm] 球体の大きさ
+	ball.e = 1;        // 弾性係数
 }
 
 void BALL::idle() {
@@ -87,9 +87,9 @@ void BALL::display() {
 		0.0, 0.0, 0.0,   // 視点目標位置 、どこを見るか目標を決める（x軸、y軸、z軸）
 		0.0, 1.0, 0.0);  // 上方向ベクトル 、視点の向き（x軸、y軸、z軸）
 
-						 //ビリヤード台の壁の描く
+	// ビリヤード台の壁の描く
 
-						 // 右の壁
+	// 右の壁
 	glPushMatrix();
 	{
 		GLfloat col[4] = { 0.0, 0.0, 0.0, 0.0 }; // 黒色
@@ -103,7 +103,7 @@ void BALL::display() {
 	// 左の壁
 	glPushMatrix();
 	{
-		GLfloat col[4] = { 0.0, 0.0, 0.0, 0.0 }; // 黒色
+		GLfloat col[4] = { 0.0, 0.0, 0.0, 0.0 };  // 黒色
 		glTranslated(-table_w / 2, 1.0, 0.0); // -x方向にtable_w/2ずらす
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, col);
 		glScalef(1.0, table_h, 1.0); // y方向にtable_h倍に引き延ばす
@@ -114,32 +114,32 @@ void BALL::display() {
 	// 上の壁
 	glPushMatrix();
 	{
-		GLfloat col[4] = { 0.0, 0.0, 0.0, 0.0 }; // 黒色
-		glTranslated(0.0, table_h / 2, 0.0); // +y方向にtable_w/2ずらす
+		GLfloat col[4] = { 0.0, 0.0, 0.0, 0.0 };  // 黒色
+		glTranslated(0.0, table_h / 2, 0.0);      // +y方向にtable_w/2ずらす
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, col);
-		glScalef(table_w, 1.0, 1.0); // x方向にtable_h倍に引き延ばす
-		glutSolidCube(1); // サイズ1の立方体を描く
+		glScalef(table_w, 1.0, 1.0);  // x方向にtable_h倍に引き延ばす
+		glutSolidCube(1);  // サイズ1の立方体を描く
 	}
 	glPopMatrix();
 
 	// 下の壁
 	glPushMatrix();
 	{
-		GLfloat col[4] = { 0.0, 0.0, 0.0, 0.0 }; // 黒色
-		glTranslated(0.0, -table_h / 2, 0.0); // -y方向にtable_w/2ずらす
+		GLfloat col[4] = { 0.0, 0.0, 0.0, 0.0 };  // 黒色
+		glTranslated(0.0, -table_h / 2, 0.0);     // -y方向にtable_w/2ずらす
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, col);
-		glScalef(table_w, 1.0, 1.0); // x方向にtable_h倍に引き延ばす
-		glutSolidCube(1); // サイズ1の立方体を描く
+		glScalef(table_w, 1.0, 1.0);  // x方向にtable_h倍に引き延ばす
+		glutSolidCube(1);  // サイズ1の立方体を描く
 	}
 	glPopMatrix();
 
 	// ビリヤード台の色付け
 	glPushMatrix();
 	{
-		GLfloat col[4] = { 0.0, 0.5, 0.0, 0.0 }; // 緑色
+		GLfloat col[4] = { 0.0, 0.5, 0.0, 0.0 };  // 緑色
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, col);
-		glScalef(table_w, table_h, 0.0); // x,y方向にtable_h倍に引き延ばす
-		glutSolidCube(1); // サイズ1の立方体を描く
+		glScalef(table_w, table_h, 0.0);  // x,y方向にtable_h倍に引き延ばす
+		glutSolidCube(1);  // サイズ1の立方体を描く
 	}
 	glPopMatrix();
 
@@ -148,13 +148,13 @@ void BALL::display() {
 	{
 		glTranslated(ball.pos[0], ball.pos[1], ball.pos[2]);  // 物体の位置
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, ball.col);
-		glutSolidSphere(ball.r, 100, 16);  // サイズ、球の綺麗さ、・・
+		glutSolidSphere(ball.r, 100, 16);  // サイズ、球の綺麗さ
 	}
 	glPopMatrix();
 
 	glutSwapBuffers();
 
-	double dt_sum = loopcounter*dt;
+	double dt_sum = loopcounter * dt;
 
 	// 状態更新・・・画面とファイルに出力(ボールの位置、速度、加速度 ＊xyz方向)
 	cout << setw(8) << dt_sum << " " <<
