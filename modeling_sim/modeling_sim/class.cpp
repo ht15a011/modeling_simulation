@@ -31,9 +31,9 @@ void BALL::ball_set() {
 	ball.col[2] = 0.0;  // F B
 	ball.col[3] = 0.0;  // F A
 
-	ball.m = 170;      // [g]
-	ball.r = 5.71 * 5; // ball.r = 120.71 / 2; // [cm] ‹…‘Ì‚Ì‘å‚«‚³
-	ball.e = 1;        // ’e«ŒW”
+	ball.m = 170;   // [g]
+	ball.r = 5.71;  // ball.r = 120.71 / 2; // [cm] ‹…‘Ì‚Ì‘å‚«‚³
+	ball.e = 1;     // ’e«ŒW”
 }
 
 void BALL::idle() {
