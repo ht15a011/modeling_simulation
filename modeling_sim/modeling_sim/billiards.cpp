@@ -14,11 +14,14 @@ BALL ball;
 ofstream fout;
 
 // 静的なメンバ変数の作成 ＊ファイル分割する際はcppファイルに書く
-const double BALL::dt = 0.017;     // ループ時間
+const double BALL::dt = 0.008;     // ループ時間
 const double BALL::mu_r = 0.9;     // 反発係数
 const double BALL::table_w = 254;  // ビリヤードのテーブル横幅 [cm]
 const double BALL::table_h = 127;  // ビリヤードのテーブル縦幅 [cm]
 long int BALL::loopcounter = 0;    // ループ時間
+const double BALL::g = 980.7;	   // 重力加速度 [cm/s^2]
+const double BALL::mu_d = 0.01;    // 動摩擦係数
+const double BALL::v_min = 0.1;	   // 速度の閾値
 
 int main(int argc, char *argv[]) {
 	// OpenGL初期化
