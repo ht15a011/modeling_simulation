@@ -1,5 +1,5 @@
-#ifndef CLASS_H_
-#define CLASS_H_
+#ifndef HEADER_H_
+#define HEADER_H_
 
 // ƒNƒ‰ƒX’è‹`•”
 class BALL {
@@ -28,4 +28,4 @@ public:
 	static void display();
 };
 
-#endif // CLASS_H_
+#endif // HEADER_H_
