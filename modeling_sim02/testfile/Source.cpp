@@ -12,27 +12,53 @@ using namespace std;
 // グローバル変数
 ofstream fout;
 long int loopcounter = 0;
-const double mu_r = 1;
-
-// ループ時間
+const double mu_r = 0.9;
 const double dt = 0.015;  // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
 const double table_w = 254; // テーブル横幅 [cm]
 const double table_h = 127; // テーブル縦幅 [cm]
+const double g = 980.7;	   // 重力加速度 [cm/s^2]
+const double mu_d = 0.01;    // 動摩擦係数
+const double v_min = 0.1;	   // 速度の閾値
 
 class BALL {
-public:
 	double m; // 質量
 	double r; // 半径
 	double e; // 弾性係数
+public:
 	double pos[3]; // 位置
 	double vel[3]; // 速度
 	double acc[3]; // 加速度
 	float col[4]; // 色
-	void set();
+	//void set();
+	BALL();
 };
 
 BALL ball;
 
+BALL::BALL() {
+	m = 170; // [g]
+	r = 5.71 / 2; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
+	e = 1;
+
+	col[0] = 1.0; // 色 R
+	col[1] = 1.0; // 色 G
+	col[2] = 0.0; // 色 B
+	col[3] = 0.0; // 色 A
+
+	pos[0] = 0.0; // x座標 初期位置
+	pos[1] = 0.0; // y座標 初期位置
+	pos[2] = 0.0; // z座標 初期位置
+
+	vel[0] = 100.0; // x方向 初期速度
+	vel[1] = 100.0; // y方向 初期速度
+	vel[2] = 0.0;   // z方向 初期速度
+
+	acc[0] = 0.0; // x方向 初期加速度
+	acc[1] = 0.0; // y方向 初期加速度
+	acc[2] = 0.0; // z方向 初期加速度
+
+}
+/*
 // ボールの初期設定
 void BALL::set() {
 	pos[0] = 0.0; // x座標 初期位置
@@ -56,7 +82,7 @@ void BALL::set() {
 	r = 5.71 / 2; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
 	e = 1;
 }
-
+*/
 void idle() {
 	glutPostRedisplay();
 }
@@ -203,17 +229,37 @@ void display() {
 	fout.flush();
 	loopcounter++;
 
+	// 動摩擦力の実装
+	if (ball.vel[0] > 0) {
+		ball.acc[0] = -mu_d * g;
+	}
+	else if (0 > ball.vel[0]) {
+		ball.acc[0] = mu_d * g;
+	}
+
+	if (ball.vel[1] > 0) {
+		ball.acc[1] = -mu_d * g;
+	}
+	else if (0 > ball.vel[1]) {
+		ball.acc[1] = mu_d * g;
+	}
+
 	// ボールが衝突した時の処理
-	if (ball.pos[0] + ball.r >= table_w / 2) {  // 右の壁に衝突した時の処理
+	if (ball.pos[0] + ball.r >= table_w / 2) {  // 右の壁
+		ball.pos[0] = table_w / 2 - ball.r;
 		ball.vel[0] = -1 * mu_r * ball.vel[0];
 	}
-	if (ball.pos[0] - ball.r <= -table_w / 2) {  // 左の壁に衝突した時の処理
+	else if (ball.pos[0] - ball.r <= -table_w / 2) {  // 左の壁
+		ball.pos[0] = -table_w / 2 + ball.r;
 		ball.vel[0] = -1 * mu_r * ball.vel[0];
 	}
-	if (ball.pos[1] + ball.r >= table_h / 2) {  // 上の壁に衝突した時の処理
+
+	if (ball.pos[1] + ball.r >= table_h / 2) {  // 上の壁
+		ball.pos[1] = table_h / 2 - ball.r;
 		ball.vel[1] = -1 * mu_r * ball.vel[1];
 	}
-	if (ball.pos[1] - ball.r <= -table_h / 2) {  // 下の壁に衝突した時の処理
+	else if (ball.pos[1] - ball.r <= -table_h / 2) {  // 下の壁
+		ball.pos[1] = -table_h / 2 + ball.r;
 		ball.vel[1] = -1 * mu_r * ball.vel[1];
 	}
 
@@ -235,7 +281,7 @@ int main(int argc, char *argv[]) {
 	glutInitWindowSize(800, 600);  // ディスプレイ画面の作成
 	glutCreateWindow("simulation");
 
-	ball.set();
+	//ball.set();
 
 	// ファイルに出力
 	string filename_output = "output.txt";
