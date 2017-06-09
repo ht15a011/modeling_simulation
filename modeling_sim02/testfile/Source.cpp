@@ -36,6 +36,7 @@ public:
 	static void idle();
 	static void resize(int, int);
 	static void keyboard(unsigned char, int, int);
+	static void make_billiards_wall();
 };
 
 BALL ball;
@@ -133,16 +134,10 @@ void BALL::keyboard(unsigned char k, int x, int y) {
 	}
 }
 
-void display() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // 画面をクリアにする
-	glLoadIdentity();
-	gluLookAt(0.0, 0.0, 500.0, // 視点位置（x軸、y軸、z軸）
-		0.0, 0.0, 0.0,   // 視点目標位置 、どこを見るか目標を決める（x軸、y軸、z軸）
-		0.0, 1.0, 0.0);  // 上方向ベクトル 、視点の向き（x軸、y軸、z軸）
 
-						 //ビリヤード台の壁の描く
-
-						 // 右の壁
+// ビリヤード台の壁を描く静的メンバ関数
+void BALL::make_billiards_wall() {
+	// 右の壁
 	glPushMatrix();
 	{
 		GLfloat col[4] = { 0.0, 0.0, 0.0, 0.0 }; // 黒色
@@ -195,6 +190,18 @@ void display() {
 		glutSolidCube(1); // サイズ1の立方体を描く
 	}
 	glPopMatrix();
+}
+
+void display() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // 画面をクリアにする
+	glLoadIdentity();
+	gluLookAt(0.0, 0.0, 500.0, // 視点位置（x軸、y軸、z軸）
+		0.0, 0.0, 0.0,   // 視点目標位置 、どこを見るか目標を決める（x軸、y軸、z軸）
+		0.0, 1.0, 0.0);  // 上方向ベクトル 、視点の向き（x軸、y軸、z軸）
+
+	//ビリヤード台の壁の描く
+	BALL::make_billiards_wall();
+	
 
 	// 球体描画 (複数の球体を描くときにこの関数を複数生成すると思われる)
 	glPushMatrix();
