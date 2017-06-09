@@ -21,23 +21,28 @@ const double mu_d = 0.01;    // 動摩擦係数
 const double v_min = 0.1;	   // 速度の閾値
 
 class BALL {
+public:
 	double m; // 質量
 	double r; // 半径
 	double e; // 弾性係数
-public:
 	double pos[3]; // 位置
 	double vel[3]; // 速度
 	double acc[3]; // 加速度
 	float col[4]; // 色
 	//void set();
 	BALL();
+	~BALL();
+	static void init();
+	static void idle();
+	static void resize(int, int);
+	static void keyboard(unsigned char, int, int);
 };
 
 BALL ball;
 
 BALL::BALL() {
 	m = 170; // [g]
-	r = 5.71 / 2; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
+	r = 5.71; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
 	e = 1;
 
 	col[0] = 1.0; // 色 R
@@ -56,8 +61,10 @@ BALL::BALL() {
 	acc[0] = 0.0; // x方向 初期加速度
 	acc[1] = 0.0; // y方向 初期加速度
 	acc[2] = 0.0; // z方向 初期加速度
-
 }
+
+BALL::~BALL(){}
+
 /*
 // ボールの初期設定
 void BALL::set() {
@@ -83,11 +90,12 @@ void BALL::set() {
 	e = 1;
 }
 */
-void idle() {
+
+void BALL::idle() {
 	glutPostRedisplay();
 }
 
-void init() {
+void BALL::init() {
 	// 光源の設定
 	GLfloat lpos0[4] = { 0.0, 100.0, 100.0, 1.0 };
 	GLfloat lcol0[4] = { 1.0, 1.0, 1.0, 1.0 };
@@ -106,7 +114,7 @@ void init() {
 	glEnable(GL_CULL_FACE);
 }
 
-void resize(int w, int h) {
+void BALL::resize(int w, int h) {
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -114,7 +122,7 @@ void resize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void keyboard(unsigned char k, int x, int y) {
+void BALL::keyboard(unsigned char k, int x, int y) {
 	switch (k) {
 	case 'q': // qで終了
 		fout.close();
@@ -188,7 +196,7 @@ void display() {
 	}
 	glPopMatrix();
 
-	// 球体描画
+	// 球体描画 (複数の球体を描くときにこの関数を複数生成すると思われる)
 	glPushMatrix();
 	{
 		glTranslated(ball.pos[0], ball.pos[1], ball.pos[2]);  // 物体の位置
@@ -228,16 +236,24 @@ void display() {
 
 	fout.flush();
 	loopcounter++;
+	
+	double vel = sqrt(ball.vel[0] * ball.vel[0] + ball.vel[1] * ball.vel[1]);
+	if (vel <= v_min) {
+		ball.vel[0] = 0.0;
+		ball.vel[1] = 0.0;
+		ball.acc[0] = 0.0;
+		ball.acc[1] = 0.0;
+	}
 
 	// 動摩擦力の実装
-	if (ball.vel[0] > 0) {
+	if (ball.vel[0] > 0) {  // x方向
 		ball.acc[0] = -mu_d * g;
 	}
 	else if (0 > ball.vel[0]) {
 		ball.acc[0] = mu_d * g;
 	}
 
-	if (ball.vel[1] > 0) {
+	if (ball.vel[1] > 0) {  // y方向
 		ball.acc[1] = -mu_d * g;
 	}
 	else if (0 > ball.vel[1]) {
@@ -270,7 +286,6 @@ void display() {
 	ball.pos[0] += ball.vel[0] * dt;
 	ball.pos[1] += ball.vel[1] * dt;
 	ball.pos[2] += ball.vel[2] * dt;
-
 }
 
 int main(int argc, char *argv[]) {
@@ -281,8 +296,6 @@ int main(int argc, char *argv[]) {
 	glutInitWindowSize(800, 600);  // ディスプレイ画面の作成
 	glutCreateWindow("simulation");
 
-	//ball.set();
-
 	// ファイルに出力
 	string filename_output = "output.txt";
 	fout.open(filename_output);
@@ -291,11 +304,11 @@ int main(int argc, char *argv[]) {
 	fout << fixed << setprecision(3);
 
 	glutDisplayFunc(display);
-	glutKeyboardFunc(keyboard);  // キーボードからの入力を受け付ける
-	glutReshapeFunc(resize);
-	glutIdleFunc(idle);
+	glutKeyboardFunc(BALL::keyboard);  // キーボードからの入力を受け付ける
+	glutReshapeFunc(BALL::resize);
+	glutIdleFunc(BALL::idle);
 
-	init();
+	BALL::init();
 	glutMainLoop();
 
 	return 0;
