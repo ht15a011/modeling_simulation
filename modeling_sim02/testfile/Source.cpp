@@ -8,27 +8,27 @@
 #include <GL/freeglut.h>
 using namespace std;
 
-
-// グローバル変数
-ofstream fout;
-long int loopcounter = 0;
-const double mu_r = 0.9;
-const double dt = 0.015;  // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
-const double table_w = 254; // テーブル横幅 [cm]
-const double table_h = 127; // テーブル縦幅 [cm]
-const double g = 980.7;	   // 重力加速度 [cm/s^2]
-const double mu_d = 0.01;    // 動摩擦係数
-const double v_min = 0.1;	   // 速度の閾値
-
 class BALL {
 public:
-	double m; // 質量
-	double r; // 半径
-	double e; // 弾性係数
+	double m;      // 質量
+	double r;      // 半径
+	double e;      // 弾性係数
 	double pos[3]; // 位置
 	double vel[3]; // 速度
 	double acc[3]; // 加速度
-	float col[4]; // 色
+	float col[4];  // 色
+
+	static ofstream fout;
+	
+	static long int loopcounter;
+	static const double mu_r;
+	static const double dt;      // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
+	static const double table_w; // テーブル横幅 [cm]
+	static const double table_h; // テーブル縦幅 [cm]
+	static const double g;	      // 重力加速度 [cm/s^2]
+	static const double mu_d;    // 動摩擦係数
+	static const double v_min;	  // 速度の閾値
+
 	//void set();
 	BALL();
 	~BALL();
@@ -37,7 +37,18 @@ public:
 	static void resize(int, int);
 	static void keyboard(unsigned char, int, int);
 	static void make_billiards_wall();
+	static void make_balls();
 };
+
+ofstream BALL::fout;
+long int BALL::loopcounter = 0;
+const double BALL::mu_r = 0.9;
+const double BALL::dt = 0.015;
+const double BALL::table_w = 254;
+const double BALL::table_h = 127;
+const double BALL::g = 980.7;
+const double BALL::mu_d = 0.01;
+const double BALL::v_min = 0.1;
 
 BALL ball;
 
@@ -64,7 +75,7 @@ BALL::BALL() {
 	acc[2] = 0.0; // z方向 初期加速度
 }
 
-BALL::~BALL(){}
+BALL::~BALL() {}
 
 /*
 // ボールの初期設定
@@ -192,17 +203,7 @@ void BALL::make_billiards_wall() {
 	glPopMatrix();
 }
 
-void display() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // 画面をクリアにする
-	glLoadIdentity();
-	gluLookAt(0.0, 0.0, 500.0, // 視点位置（x軸、y軸、z軸）
-		0.0, 0.0, 0.0,   // 視点目標位置 、どこを見るか目標を決める（x軸、y軸、z軸）
-		0.0, 1.0, 0.0);  // 上方向ベクトル 、視点の向き（x軸、y軸、z軸）
-
-	//ビリヤード台の壁の描く
-	BALL::make_billiards_wall();
-	
-
+void BALL::make_balls() {
 	// 球体描画 (複数の球体を描くときにこの関数を複数生成すると思われる)
 	glPushMatrix();
 	{
@@ -211,10 +212,22 @@ void display() {
 		glutSolidSphere(ball.r, 100, 16);  // サイズ、球の綺麗さ、・・
 	}
 	glPopMatrix();
+}
+
+void display() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // 画面をクリアにする
+	glLoadIdentity();
+	gluLookAt(0.0, 0.0, 500.0, // 視点位置（x軸、y軸、z軸）
+		0.0, 0.0, 0.0,   // 視点目標位置 、どこを見るか目標を決める（x軸、y軸、z軸）
+		0.0, 1.0, 0.0);  // 上方向ベクトル 、視点の向き（x軸、y軸、z軸）
+
+	// ビリヤード台の壁の描く
+	BALL::make_billiards_wall();
+	BALL::make_balls();
 
 	glutSwapBuffers();
 
-	double dt_sum = loopcounter*dt;
+	double dt_sum = BALL::loopcounter * BALL::dt;
 
 	// 状態更新・・・画面とファイルに出力
 	cout << setw(8) << dt_sum << " " <<
@@ -229,7 +242,7 @@ void display() {
 		setw(8) << ball.acc[2] << " " <<
 		endl;
 
-	fout << setw(8) << dt_sum << " " <<
+	BALL::fout << setw(8) << dt_sum << " " <<
 		setw(8) << ball.pos[0] << " " <<
 		setw(8) << ball.pos[1] << " " <<
 		setw(8) << ball.pos[2] << " " <<
@@ -241,11 +254,11 @@ void display() {
 		setw(8) << ball.acc[2] << " " <<
 		endl;
 
-	fout.flush();
-	loopcounter++;
-	
+	BALL::fout.flush();
+	BALL::loopcounter++;
+
 	double vel = sqrt(ball.vel[0] * ball.vel[0] + ball.vel[1] * ball.vel[1]);
-	if (vel <= v_min) {
+	if (vel <= BALL::v_min) {
 		ball.vel[0] = 0.0;
 		ball.vel[1] = 0.0;
 		ball.acc[0] = 0.0;
@@ -254,45 +267,45 @@ void display() {
 
 	// 動摩擦力の実装
 	if (ball.vel[0] > 0) {  // x方向
-		ball.acc[0] = -mu_d * g;
+		ball.acc[0] = -BALL::mu_d * BALL::g;
 	}
 	else if (0 > ball.vel[0]) {
-		ball.acc[0] = mu_d * g;
+		ball.acc[0] = BALL::mu_d * BALL::g;
 	}
 
 	if (ball.vel[1] > 0) {  // y方向
-		ball.acc[1] = -mu_d * g;
+		ball.acc[1] = -BALL::mu_d * BALL::g;
 	}
 	else if (0 > ball.vel[1]) {
-		ball.acc[1] = mu_d * g;
+		ball.acc[1] = BALL::mu_d * BALL::g;
 	}
 
 	// ボールが衝突した時の処理
-	if (ball.pos[0] + ball.r >= table_w / 2) {  // 右の壁
-		ball.pos[0] = table_w / 2 - ball.r;
-		ball.vel[0] = -1 * mu_r * ball.vel[0];
+	if (ball.pos[0] + ball.r >= BALL::table_w / 2) {  // 右の壁
+		ball.pos[0] = BALL::table_w / 2 - ball.r;
+		ball.vel[0] = -1 * BALL::mu_r * ball.vel[0];
 	}
-	else if (ball.pos[0] - ball.r <= -table_w / 2) {  // 左の壁
-		ball.pos[0] = -table_w / 2 + ball.r;
-		ball.vel[0] = -1 * mu_r * ball.vel[0];
-	}
-
-	if (ball.pos[1] + ball.r >= table_h / 2) {  // 上の壁
-		ball.pos[1] = table_h / 2 - ball.r;
-		ball.vel[1] = -1 * mu_r * ball.vel[1];
-	}
-	else if (ball.pos[1] - ball.r <= -table_h / 2) {  // 下の壁
-		ball.pos[1] = -table_h / 2 + ball.r;
-		ball.vel[1] = -1 * mu_r * ball.vel[1];
+	else if (ball.pos[0] - ball.r <= -BALL::table_w / 2) {  // 左の壁
+		ball.pos[0] = -BALL::table_w / 2 + ball.r;
+		ball.vel[0] = -1 * BALL::mu_r * ball.vel[0];
 	}
 
-	ball.vel[0] += ball.acc[0] * dt;
-	ball.vel[1] += ball.acc[1] * dt;
-	ball.vel[2] += ball.acc[2] * dt;
+	if (ball.pos[1] + ball.r >= BALL::table_h / 2) {  // 上の壁
+		ball.pos[1] = BALL::table_h / 2 - ball.r;
+		ball.vel[1] = -1 * BALL::mu_r * ball.vel[1];
+	}
+	else if (ball.pos[1] - ball.r <= -BALL::table_h / 2) {  // 下の壁
+		ball.pos[1] = -BALL::table_h / 2 + ball.r;
+		ball.vel[1] = -1 * BALL::mu_r * ball.vel[1];
+	}
 
-	ball.pos[0] += ball.vel[0] * dt;
-	ball.pos[1] += ball.vel[1] * dt;
-	ball.pos[2] += ball.vel[2] * dt;
+	ball.vel[0] += ball.acc[0] * BALL::dt;
+	ball.vel[1] += ball.acc[1] * BALL::dt;
+	ball.vel[2] += ball.acc[2] * BALL::dt;
+
+	ball.pos[0] += ball.vel[0] * BALL::dt;
+	ball.pos[1] += ball.vel[1] * BALL::dt;
+	ball.pos[2] += ball.vel[2] * BALL::dt;
 }
 
 int main(int argc, char *argv[]) {
@@ -305,10 +318,10 @@ int main(int argc, char *argv[]) {
 
 	// ファイルに出力
 	string filename_output = "output.txt";
-	fout.open(filename_output);
+	BALL::fout.open(filename_output);
 	//出力形式の調整 (小数点以下の3ケタに調整)
 	cout << fixed << setprecision(3);
-	fout << fixed << setprecision(3);
+	BALL::fout << fixed << setprecision(3);
 
 	glutDisplayFunc(display);
 	glutKeyboardFunc(BALL::keyboard);  // キーボードからの入力を受け付ける
