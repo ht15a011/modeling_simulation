@@ -31,6 +31,7 @@ public:
 
 	//void set();
 	BALL();
+	BALL(double, float, float, float, float);
 	~BALL();
 	static void init();
 	static void idle();
@@ -52,6 +53,7 @@ const double BALL::v_min = 0.1;
 
 BALL ball;
 
+// コンストラクター
 BALL::BALL() {
 	m = 170; // [g]
 	r = 5.71; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
@@ -75,33 +77,36 @@ BALL::BALL() {
 	acc[2] = 0.0; // z方向 初期加速度
 }
 
-BALL::~BALL() {}
+BALL::BALL(double size, float col0, float col1, float col2, float col3) {
+	static double pos0, pos1, pos2;
+	pos0 = 0.0;
+	pos1 = 0.0;
+	pos2 = 0.0;
+	
+	m = 170; // [g]
+	r = size; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
+	e = 1;
 
-/*
-// ボールの初期設定
-void BALL::set() {
-	pos[0] = 0.0; // x座標 初期位置
-	pos[1] = 0.0; // y座標 初期位置
-	pos[2] = 0.0; // z座標 初期位置
+	col[0] = col0; // 色 R
+	col[1] = col1; // 色 G
+	col[2] = col2; // 色 B
+	col[3] = col3; // 色 A
 
-	vel[0] = 127.0; // x方向 初期速度
-	vel[1] = 0.0; // y方向 初期速度
-	vel[2] = 0.0; // z方向 初期速度
+	pos[0] = pos0; // x座標 初期位置
+	pos[1] = pos1; // y座標 初期位置
+	pos[2] = pos2; // z座標 初期位置
+
+	vel[0] = 100.0; // x方向 初期速度
+	vel[1] = 100.0; // y方向 初期速度
+	vel[2] = 0.0;   // z方向 初期速度
 
 	acc[0] = 0.0; // x方向 初期加速度
 	acc[1] = 0.0; // y方向 初期加速度
 	acc[2] = 0.0; // z方向 初期加速度
-
-	col[0] = 1.0; // 色 R
-	col[1] = 1.0; // 色 G
-	col[2] = 0.0; // 色 B
-	col[3] = 0.0; // 色 A
-
-	m = 170; // [g]
-	r = 5.71 / 2; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
-	e = 1;
 }
-*/
+
+// デストラクター
+BALL::~BALL() {}
 
 void BALL::idle() {
 	glutPostRedisplay();
