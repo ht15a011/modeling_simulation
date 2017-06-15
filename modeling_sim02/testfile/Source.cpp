@@ -35,37 +35,9 @@ void display() {
 
 	glutSwapBuffers();
 
-	double dt_sum = BALL::loopcounter * BALL::dt;
+	BALL::File_output();
 
 	for (int i = 0; i < ball_num; i++) {
-		// 状態更新・・・画面とファイルに出力
-		cout << setw(8) << dt_sum << " " <<
-			setw(8) << ball[i].pos[0] << " " <<
-			setw(8) << ball[i].pos[1] << " " <<
-			setw(8) << ball[i].pos[2] << " " <<
-			setw(8) << ball[i].vel[0] << " " <<
-			setw(8) << ball[i].vel[1] << " " <<
-			setw(8) << ball[i].vel[2] << " " <<
-			setw(8) << ball[i].acc[0] << " " <<
-			setw(8) << ball[i].acc[1] << " " <<
-			setw(8) << ball[i].acc[2] << " " <<
-			endl;
-
-		fout << setw(8) << dt_sum << " " <<
-			setw(8) << ball[i].pos[0] << " " <<
-			setw(8) << ball[i].pos[1] << " " <<
-			setw(8) << ball[i].pos[2] << " " <<
-			setw(8) << ball[i].vel[0] << " " <<
-			setw(8) << ball[i].vel[1] << " " <<
-			setw(8) << ball[i].vel[2] << " " <<
-			setw(8) << ball[i].acc[0] << " " <<
-			setw(8) << ball[i].acc[1] << " " <<
-			setw(8) << ball[i].acc[2] << " " <<
-			endl;
-
-		fout.flush();
-		BALL::loopcounter++;
-
 		double vel = sqrt(ball[i].vel[0] * ball[i].vel[0] + ball[i].vel[1] * ball[i].vel[1]);
 		if (vel <= BALL::v_min) {
 			ball[i].vel[0] = 0.0;

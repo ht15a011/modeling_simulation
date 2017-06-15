@@ -142,8 +142,8 @@ void BALL::make_billiards_wall() {
 	glPopMatrix();
 }
 
+// 球体描画
 void BALL::make_balls() {
-	// 球体描画 (複数の球体を描くときにこの関数を複数生成すると思われる)
 	for (int i = 0; i < ball_num; i++) {
 		glPushMatrix();
 		{
@@ -153,4 +153,38 @@ void BALL::make_balls() {
 		}
 		glPopMatrix();
 	}
+}
+
+void BALL::File_output() {
+	double dt_sum = BALL::loopcounter * BALL::dt;
+
+	for (int i = 0; i < ball_num; i++) {
+		// 状態更新・・・画面とファイルに出力
+		cout << setw(8) << dt_sum << " " <<
+			setw(8) << ball[i].pos[0] << " " <<
+			setw(8) << ball[i].pos[1] << " " <<
+			setw(8) << ball[i].pos[2] << " " <<
+			setw(8) << ball[i].vel[0] << " " <<
+			setw(8) << ball[i].vel[1] << " " <<
+			setw(8) << ball[i].vel[2] << " " <<
+			setw(8) << ball[i].acc[0] << " " <<
+			setw(8) << ball[i].acc[1] << " " <<
+			setw(8) << ball[i].acc[2] << " " <<
+			endl;
+
+		fout << setw(8) << dt_sum << " " <<
+			setw(8) << ball[i].pos[0] << " " <<
+			setw(8) << ball[i].pos[1] << " " <<
+			setw(8) << ball[i].pos[2] << " " <<
+			setw(8) << ball[i].vel[0] << " " <<
+			setw(8) << ball[i].vel[1] << " " <<
+			setw(8) << ball[i].vel[2] << " " <<
+			setw(8) << ball[i].acc[0] << " " <<
+			setw(8) << ball[i].acc[1] << " " <<
+			setw(8) << ball[i].acc[2] << " " <<
+			endl;
+
+		fout.flush();
+	}
+	BALL::loopcounter++;
 }

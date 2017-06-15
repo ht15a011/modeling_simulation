@@ -29,6 +29,7 @@ public:
 	static void keyboard(unsigned char, int, int);
 	static void make_billiards_wall();
 	static void make_balls();
+	static void File_output();
 };
 
 #endif // HEADER_H_
