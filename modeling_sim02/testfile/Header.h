@@ -20,13 +20,13 @@ public:
 	static const double mu_d;    // “®–€CŒW”
 	static const double v_min;	  // ‘¬“x‚Ìè‡’l
 
-								  //void set();
 	BALL();
 	~BALL();
 	static void init();
 	static void idle();
 	static void resize(int, int);
 	static void keyboard(unsigned char, int, int);
+	static void display();
 	static void make_billiards_wall();
 	static void make_balls();
 	static void File_output();

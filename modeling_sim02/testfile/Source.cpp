@@ -9,86 +9,18 @@
 #include "Header.h"
 using namespace std;
 
-const int ball_num = 2;
 long int BALL::loopcounter = 0;
 const double BALL::mu_r = 0.9;
-const double BALL::dt = 0.015;
+const double BALL::dt = 0.001;
 const double BALL::table_w = 254;
 const double BALL::table_h = 127;
 const double BALL::g = 980.7;
 const double BALL::mu_d = 0.01;
 const double BALL::v_min = 0.1;
 
+const int ball_num = 2;
 BALL ball[ball_num];
 ofstream fout;
-
-void display() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // 画面をクリアにする
-	glLoadIdentity();
-	gluLookAt(0.0, 0.0, 500.0, // 視点位置（x軸、y軸、z軸）
-		0.0, 0.0, 0.0,   // 視点目標位置 、どこを見るか目標を決める（x軸、y軸、z軸）
-		0.0, 1.0, 0.0);  // 上方向ベクトル 、視点の向き（x軸、y軸、z軸）
-
-	// ビリヤード台の壁の描く
-	BALL::make_billiards_wall();
-	BALL::make_balls();
-
-	glutSwapBuffers();
-
-	BALL::File_output();
-
-	for (int i = 0; i < ball_num; i++) {
-		double vel = sqrt(ball[i].vel[0] * ball[i].vel[0] + ball[i].vel[1] * ball[i].vel[1]);
-		if (vel <= BALL::v_min) {
-			ball[i].vel[0] = 0.0;
-			ball[i].vel[1] = 0.0;
-			ball[i].acc[0] = 0.0;
-			ball[i].acc[1] = 0.0;
-		}
-
-		// 動摩擦力の実装
-		if (ball[i].vel[0] > 0) {  // x方向
-			ball[i].acc[0] = -BALL::mu_d * BALL::g;
-		}
-		else if (0 > ball[i].vel[0]) {
-			ball[i].acc[0] = BALL::mu_d * BALL::g;
-		}
-
-		if (ball[i].vel[1] > 0) {  // y方向
-			ball[i].acc[1] = -BALL::mu_d * BALL::g;
-		}
-		else if (0 > ball[i].vel[1]) {
-			ball[i].acc[1] = BALL::mu_d * BALL::g;
-		}
-
-		// ボールが衝突した時の処理
-		if (ball[i].pos[0] + ball[i].r >= BALL::table_w / 2) {  // 右の壁
-			ball[i].pos[0] = BALL::table_w / 2 - ball[i].r;
-			ball[i].vel[0] = -1 * BALL::mu_r * ball[i].vel[0];
-		}
-		else if (ball[i].pos[0] - ball[i].r <= -BALL::table_w / 2) {  // 左の壁
-			ball[i].pos[0] = -BALL::table_w / 2 + ball[i].r;
-			ball[i].vel[0] = -1 * BALL::mu_r * ball[i].vel[0];
-		}
-
-		if (ball[i].pos[1] + ball[i].r >= BALL::table_h / 2) {  // 上の壁
-			ball[i].pos[1] = BALL::table_h / 2 - ball[i].r;
-			ball[i].vel[1] = -1 * BALL::mu_r * ball[i].vel[1];
-		}
-		else if (ball[i].pos[1] - ball[i].r <= -BALL::table_h / 2) {  // 下の壁
-			ball[i].pos[1] = -BALL::table_h / 2 + ball[i].r;
-			ball[i].vel[1] = -1 * BALL::mu_r * ball[i].vel[1];
-		}
-
-		ball[i].vel[0] += ball[i].acc[0] * BALL::dt;
-		ball[i].vel[1] += ball[i].acc[1] * BALL::dt;
-		ball[i].vel[2] += ball[i].acc[2] * BALL::dt;
-
-		ball[i].pos[0] += ball[i].vel[0] * BALL::dt;
-		ball[i].pos[1] += ball[i].vel[1] * BALL::dt;
-		ball[i].pos[2] += ball[i].vel[2] * BALL::dt;
-	}
-}
 
 int main(int argc, char *argv[]) {
 	// OpenGL初期化
@@ -105,7 +37,7 @@ int main(int argc, char *argv[]) {
 	cout << fixed << setprecision(3);
 	fout << fixed << setprecision(3);
 
-	glutDisplayFunc(display);
+	glutDisplayFunc(BALL::display);
 	glutKeyboardFunc(BALL::keyboard);  // キーボードからの入力を受け付ける
 	glutReshapeFunc(BALL::resize);
 	glutIdleFunc(BALL::idle);
