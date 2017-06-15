@@ -22,7 +22,6 @@ public:
 
 								  //void set();
 	BALL();
-	BALL(double, float, float, float, float);
 	~BALL();
 	static void init();
 	static void idle();

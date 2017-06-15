@@ -9,59 +9,34 @@
 #include "Header.h"
 using namespace std;
 
-extern BALL ball;
+extern const int ball_num = 2;;
+extern BALL ball[ball_num];
 extern ofstream fout;
 
 // コンストラクター
 BALL::BALL() {
-	m = 170; // [g]
-	r = 5.71; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
-	e = 1;
+	for (int i = 0; i < ball_num; i++) {
+		m = 170; // [g]
+		r = 5.71 / 2; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
+		e = 1;
 
-	col[0] = 1.0; // 色 R
-	col[1] = 1.0; // 色 G
-	col[2] = 0.0; // 色 B
-	col[3] = 0.0; // 色 A
+		ball[i].col[0] = 1.0; // 色 R
+		ball[i].col[1] = 1.0; // 色 G
+		ball[i].col[2] = 0.0; // 色 B
+		ball[i].col[3] = 0.0; // 色 A
 
-	pos[0] = 0.0; // x座標 初期位置
-	pos[1] = 0.0; // y座標 初期位置
-	pos[2] = 0.0; // z座標 初期位置
+		ball[i].pos[0] = 0.0; // x座標 初期位置
+		ball[i].pos[1] = 0.0; // y座標 初期位置
+		ball[i].pos[2] = 0.0; // z座標 初期位置
 
-	vel[0] = 100.0; // x方向 初期速度
-	vel[1] = 100.0; // y方向 初期速度
-	vel[2] = 0.0;   // z方向 初期速度
+		ball[i].vel[0] = 100.0; // x方向 初期速度
+		ball[i].vel[1] = 100.0; // y方向 初期速度
+		ball[i].vel[2] = 0.0;   // z方向 初期速度
 
-	acc[0] = 0.0; // x方向 初期加速度
-	acc[1] = 0.0; // y方向 初期加速度
-	acc[2] = 0.0; // z方向 初期加速度
-}
-
-BALL::BALL(double size, float col0, float col1, float col2, float col3) {
-	static double pos0, pos1, pos2;
-	pos0 = 0.0;
-	pos1 = 0.0;
-	pos2 = 0.0;
-
-	m = 170; // [g]
-	r = size; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
-	e = 1;
-
-	col[0] = col0; // 色 R
-	col[1] = col1; // 色 G
-	col[2] = col2; // 色 B
-	col[3] = col3; // 色 A
-
-	pos[0] = pos0; // x座標 初期位置
-	pos[1] = pos1; // y座標 初期位置
-	pos[2] = pos2; // z座標 初期位置
-
-	vel[0] = 100.0; // x方向 初期速度
-	vel[1] = 100.0; // y方向 初期速度
-	vel[2] = 0.0;   // z方向 初期速度
-
-	acc[0] = 0.0; // x方向 初期加速度
-	acc[1] = 0.0; // y方向 初期加速度
-	acc[2] = 0.0; // z方向 初期加速度
+		ball[i].acc[0] = 0.0; // x方向 初期加速度
+		ball[i].acc[1] = 0.0; // y方向 初期加速度
+		ball[i].acc[2] = 0.0; // z方向 初期加速度
+	}
 }
 
 // デストラクター
@@ -169,11 +144,13 @@ void BALL::make_billiards_wall() {
 
 void BALL::make_balls() {
 	// 球体描画 (複数の球体を描くときにこの関数を複数生成すると思われる)
-	glPushMatrix();
-	{
-		glTranslated(ball.pos[0], ball.pos[1], ball.pos[2]);  // 物体の位置
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, ball.col);
-		glutSolidSphere(ball.r, 100, 16);  // サイズ、球の綺麗さ、・・
+	for (int i = 0; i < ball_num; i++) {
+		glPushMatrix();
+		{
+			glTranslated(ball[i].pos[0], ball[i].pos[1], ball[i].pos[2]);  // 物体の位置
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, ball[i].col);
+			glutSolidSphere(ball[i].r, 100, 16);  // サイズ、球の綺麗さ、・・
+		}
+		glPopMatrix();
 	}
-	glPopMatrix();
 }
