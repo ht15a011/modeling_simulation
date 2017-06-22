@@ -6,12 +6,14 @@
 using namespace std;
 
 ifstream fin;
-vector< vector<double> > ball_val;
 
 int main()
 {
 	string filename_input = "./input.txt"; // 入力ファイル名
 	int count_line = 10;
+	vector< vector<double> > ball_val;
+
+	ball_val = vector<vector<double>>(count_line, vector<double>(16, 0));
 
 	// ファイルを開く
 	fin.open(filename_input.c_str());
@@ -21,26 +23,22 @@ int main()
 		return -1;
 	}
 
-	ball_val.resize(count_line);
-	for (int i = 0; i < count_line; i++) {
-		ball_val[i].resize(16);
-	}
-
 	while (!fin.eof() && !fin.fail()) {
 		vector<double> in;
 		double a[16];
 
-		fin >> a[0] >> a[1] >> a2 >> a3 >> a4 >> a5
-			>> a6 >> a[7] >> a[8] >> a9 >> a10 >> a11 >> a12 >> a13 >> a14 >> a15;
+		fin >> a[0] >> a[1] >> a[2] >> a[3] >> a[4] >> a[5]
+			>> a[6] >> a[7] >> a[8] >> a[9] >> a[10] >> a[11]
+			>> a[12] >> a[13] >> a[14] >> a[15];
 
 		for (int i = 0; i < 16; i++) {
 			in.push_back(a[i]);
 		}
 
-		//ball_val.pop_back(in);
+		ball_val.push_back(in);
 	}
-	/*
-	for (int i = 0; i < ball_val.size(); i++) {
+	
+	for (int i = 0; i < count_line; i++) {
 		cout << ball_val[i][0] << " "
 			<< ball_val[i][1] << " "
 			<< ball_val[i][2] << " "
@@ -56,9 +54,9 @@ int main()
 			<< ball_val[i][12] << " "
 			<< ball_val[i][13] << " "
 			<< ball_val[i][14] << " "
-			<< ball_val[i][15];
+			<< ball_val[i][15] << endl;
 	}
-	*/
+	
 	// ファイルを閉じる
 	fin.close();
 
