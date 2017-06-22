@@ -1,15 +1,16 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include<vector>
 using namespace std;
 
 ifstream fin;
+vector< vector<double> > ball_val;
 
 int main()
 {
 	string filename_input = "./input.txt"; // 入力ファイル名
-	double data[3];
-	int count = 0;
+	int count_line = 10;
 
 	// ファイルを開く
 	fin.open(filename_input.c_str());
@@ -19,10 +20,17 @@ int main()
 		return -1;
 	}
 
+	ball_val.resize(count_line);
+	for (int i = 0; i < count_line; i++) {
+		ball_val[i].resize(16);
+	}
+
 	while (!fin.eof() && !fin.fail()) {
-		fin >> data[0] >> data[1] >> data[2]; // ファイル（fin）から一行読み込んで，data[0], data[1], data[2]に代入する．
-		cout << count << " " << data[0] << " " << data[1] << " " << data[2] << endl;
-		count++;
+		for (int i = 0; i < count_line; i++) {
+			for (int j = 0; i < 16; j++) {
+				fin >> ball_val[i][j];
+			}
+		}
 	}
 
 	// ファイルを閉じる

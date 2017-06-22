@@ -15,32 +15,35 @@ const int ball_num = 15;
 extern BALL ball[ball_num];
 extern ofstream fout;
 extern ifstream fin;
+vector< vector<double> > ball_val;
 
 // コンストラクター
 BALL::BALL() {
-	set_ball_val();
+	Set_ball_val();
 
-	for (int i = 0; i < ball_num; i++) {
-		ball[i].m = 170; // [g]
-		ball[i].r = 5.71 / 2; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
-		ball[i].e = 1;
+	for (int i = 0; i < count_line; i++) {
+		for (int j = 0; j < 16; j++) {
+			ball[i].m = ball_val[i][j]; // [g]
+			ball[i].r = ball_val[i][j]; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
+			ball[i].e = ball_val[i][j];
 
-		ball[i].col[0] = color0(mt); // 色 R
-		ball[i].col[1] = color1(mt); // 色 G
-		ball[i].col[2] = color2(mt); // 色 B
-		ball[i].col[3] = color3(mt); // 色 A
+			ball[i].col[0] = ball_val[i][j]; // 色 R
+			ball[i].col[1] = ball_val[i][j]; // 色 G
+			ball[i].col[2] = ball_val[i][j]; // 色 B
+			ball[i].col[3] = ball_val[i][j]; // 色 A
 
-		ball[i].pos[0] = 0.0; // x座標 初期位置
-		ball[i].pos[1] = 0.0; // y座標 初期位置
-		ball[i].pos[2] = ball[i].r; // z座標 初期位置
+			ball[i].pos[0] = ball_val[i][j]; // x座標 初期位置
+			ball[i].pos[1] = ball_val[i][j]; // y座標 初期位置
+			ball[i].pos[2] = ball_val[i][j]; // z座標 初期位置
 
-		ball[i].vel[0] = xvel(mt); // x方向 初期速度
-		ball[i].vel[1] = yvel(mt); // y方向 初期速度
-		ball[i].vel[2] = 0.0;   // z方向 初期速度
+			ball[i].vel[0] = ball_val[i][j]; // x方向 初期速度
+			ball[i].vel[1] = ball_val[i][j]; // y方向 初期速度
+			ball[i].vel[2] = ball_val[i][j];   // z方向 初期速度
 
-		ball[i].acc[0] = 0.0; // x方向 初期加速度
-		ball[i].acc[1] = 0.0; // y方向 初期加速度
-		ball[i].acc[2] = 0.0; // z方向 初期加速度
+			ball[i].acc[0] = ball_val[i][j]; // x方向 初期加速度
+			ball[i].acc[1] = ball_val[i][j]; // y方向 初期加速度
+			ball[i].acc[2] = ball_val[i][j]; // z方向 初期加速度
+		}
 	}
 }
 
@@ -226,12 +229,9 @@ void BALL::make_balls() {
 	}
 }
 
-vector<vector<double>> BALL::set_ball_val() {
-	int count_line = 0;
-	
-	while (!fin.eof() && !fin.fail()) {
-		count_line++;
-	}
+// ファイルからボールの初期値を読み込んでvector型変数に格納する静的メンバ関数
+void BALL::Set_ball_val() {
+	count_line = 10;
 
 	ball_val.resize(count_line);
 	for (int i = 0; i < count_line; i++) {

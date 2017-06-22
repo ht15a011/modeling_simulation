@@ -10,7 +10,8 @@
 #include "Header.h"
 using namespace std;
 
-vector< vector<int> > BALL::ball_val;
+//vector< vector<double> > BALL::ball_val;
+int BALL::count_line = 0;
 long int BALL::loopcounter = 0;
 const double BALL::mu_r = 0.9;
 const double BALL::dt = 0.0022;
