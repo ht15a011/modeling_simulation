@@ -10,25 +10,12 @@
 #include "Header.h"
 using namespace std;
 
-const int ball_num = 2;
+const int ball_num = 15;
 extern BALL ball[ball_num];
 extern ofstream fout;
 
 // コンストラクター
 BALL::BALL() {
-	random_device rd;  // 非決定的な乱数生成器
-	mt19937_64 mt(rd());  // メルセンヌ・ツイスタの64ビット版、引数は初期シード
-
-	// 色の乱数生成
-	uniform_real_distribution<double> color0(0.0, 1.0);
-	uniform_real_distribution<double> color1(0.0, 1.0);
-	uniform_real_distribution<double> color2(0.0, 1.0);
-	uniform_real_distribution<double> color3(0.0, 1.0);
-
-	// 初期速度の乱数生成
-	uniform_real_distribution<double> xvel(-100.0, 100.0);
-	uniform_real_distribution<double> yvel(-100.0, 100.0);
-
 	for (int i = 0; i < ball_num; i++) {
 		ball[i].m = 170; // [g]
 		ball[i].r = 5.71 / 2; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
@@ -41,7 +28,7 @@ BALL::BALL() {
 
 		ball[i].pos[0] = 0.0; // x座標 初期位置
 		ball[i].pos[1] = 0.0; // y座標 初期位置
-		ball[i].pos[2] = 0.0; // z座標 初期位置
+		ball[i].pos[2] = ball[i].r; // z座標 初期位置
 
 		ball[i].vel[0] = xvel(mt); // x方向 初期速度
 		ball[i].vel[1] = yvel(mt); // y方向 初期速度
@@ -252,7 +239,7 @@ void BALL::File_output() {
 			setw(8) << ball[i].acc[1] << " " <<
 			setw(8) << ball[i].acc[2] << " " <<
 			endl;
-			*/
+		*/
 		fout << setw(8) << dt_sum << " " <<
 			setw(8) << ball[i].pos[0] << " " <<
 			setw(8) << ball[i].pos[1] << " " <<
