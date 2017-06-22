@@ -5,10 +5,12 @@
 #include <iomanip>
 #include <stdlib.h>
 #include <string>
+#include <vector>
 #include <GL/freeglut.h>
 #include "Header.h"
 using namespace std;
 
+vector< vector<int> > BALL::ball_val;
 long int BALL::loopcounter = 0;
 const double BALL::mu_r = 0.9;
 const double BALL::dt = 0.0022;
@@ -31,7 +33,16 @@ int main(int argc, char *argv[]) {
 	glutInitWindowSize(800, 600);  // ディスプレイ画面の作成
 	glutCreateWindow("simulation");
 
-	// 
+	// ファイルから球の初期値を読み込む
+	string filename_input = "./input.txt";
+	
+	// ファイルを開く
+	fin.open(filename_input.c_str());
+	if (!fin.is_open()) {
+		cout << "fin error" << endl;
+		cin.get();
+		return -1;
+	}
 
 	// ファイルに出力
 	string filename_output = "output.txt";

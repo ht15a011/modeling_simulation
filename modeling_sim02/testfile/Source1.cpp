@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <stdlib.h>
 #include <string>
+#include <vector>
 #include <GL/freeglut.h>
 #include <random>
 #include "Header.h"
@@ -13,9 +14,12 @@ using namespace std;
 const int ball_num = 15;
 extern BALL ball[ball_num];
 extern ofstream fout;
+extern ifstream fin;
 
 // コンストラクター
 BALL::BALL() {
+	set_ball_val();
+
 	for (int i = 0; i < ball_num; i++) {
 		ball[i].m = 170; // [g]
 		ball[i].r = 5.71 / 2; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
@@ -220,6 +224,29 @@ void BALL::make_balls() {
 		}
 		glPopMatrix();
 	}
+}
+
+vector<vector<double>> BALL::set_ball_val() {
+	int count_line = 0;
+	
+	while (!fin.eof() && !fin.fail()) {
+		count_line++;
+	}
+
+	ball_val.resize(count_line);
+	for (int i = 0; i < count_line; i++) {
+		ball_val[i].resize(16);
+	}
+
+	while (!fin.eof() && !fin.fail()) {
+		for (int i = 0; i < count_line; i++) {
+			for (int j = 0; i < 16; j++) {
+				fin >> ball_val[i][j];
+			}
+		}
+	}
+
+	fin.close();
 }
 
 void BALL::File_output() {

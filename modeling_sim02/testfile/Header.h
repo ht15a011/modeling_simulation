@@ -19,8 +19,11 @@ public:
 	double pos[3];  // ˆÊ’u
 	double vel[3];  // ‘¬“x
 	double acc[3];  // ‰Á‘¬“x
+	static vector< vector<int> > ball_val;
+	int count_line;
 	BALL();
 	~BALL();
+	static vector<vector<double>> set_ball_val();
 	static void init();
 	static void idle();
 	static void resize(int, int);
