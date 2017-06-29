@@ -19,11 +19,11 @@ public:
 	double pos[3];  // ˆÊ’u
 	double vel[3];  // ‘¬“x
 	double acc[3];  // ‰Á‘¬“x
-	//vector< vector<double> > ball_val;
 	static int count_line;
 	BALL();
 	~BALL();
-	static void Set_ball_val();
+	static void Set_ball();
+	static void data_count();
 	static void init();
 	static void idle();
 	static void resize(int, int);
@@ -31,6 +31,7 @@ public:
 	static void display();
 	static void make_billiards_wall();
 	static void make_balls();
+	static void File_input();
 	static void File_output();
 };
 

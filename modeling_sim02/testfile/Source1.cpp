@@ -7,48 +7,46 @@
 #include <string>
 #include <vector>
 #include <GL/freeglut.h>
-#include <random>
 #include "Header.h"
 using namespace std;
 
-const int ball_num = 15;
-extern BALL ball[ball_num];
+extern vector<BALL> ball;
 extern ofstream fout;
 extern ifstream fin;
 vector< vector<double> > ball_val;
 
 // コンストラクター
-BALL::BALL() {
-	Set_ball_val();
-
-	for (int i = 0; i < count_line; i++) {
-		for (int j = 0; j < 16; j++) {
-			ball[i].m = ball_val[i][j]; // [g]
-			ball[i].r = ball_val[i][j]; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
-			ball[i].e = ball_val[i][j];
-
-			ball[i].col[0] = ball_val[i][j]; // 色 R
-			ball[i].col[1] = ball_val[i][j]; // 色 G
-			ball[i].col[2] = ball_val[i][j]; // 色 B
-			ball[i].col[3] = ball_val[i][j]; // 色 A
-
-			ball[i].pos[0] = ball_val[i][j]; // x座標 初期位置
-			ball[i].pos[1] = ball_val[i][j]; // y座標 初期位置
-			ball[i].pos[2] = ball_val[i][j]; // z座標 初期位置
-
-			ball[i].vel[0] = ball_val[i][j]; // x方向 初期速度
-			ball[i].vel[1] = ball_val[i][j]; // y方向 初期速度
-			ball[i].vel[2] = ball_val[i][j];   // z方向 初期速度
-
-			ball[i].acc[0] = ball_val[i][j]; // x方向 初期加速度
-			ball[i].acc[1] = ball_val[i][j]; // y方向 初期加速度
-			ball[i].acc[2] = ball_val[i][j]; // z方向 初期加速度
-		}
-	}
-}
+BALL::BALL() {}
 
 // デストラクター
 BALL::~BALL() {}
+
+void BALL::Set_ball() {
+	ball.resize(count_line);
+
+	for (int i = 0; i < count_line; i++) {
+		ball[i].m = ball_val[i][0]; // [g]
+		ball[i].r = ball_val[i][1]; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
+		ball[i].e = ball_val[i][2];
+
+		ball[i].pos[0] = ball_val[i][3]; // x座標 初期位置
+		ball[i].pos[1] = ball_val[i][4]; // y座標 初期位置
+		ball[i].pos[2] = ball_val[i][5]; // z座標 初期位置
+
+		ball[i].vel[0] = ball_val[i][6]; // x方向 初期速度
+		ball[i].vel[1] = ball_val[i][7]; // y方向 初期速度
+		ball[i].vel[2] = ball_val[i][8];   // z方向 初期速度
+
+		ball[i].acc[0] = ball_val[i][9]; // x方向 初期加速度
+		ball[i].acc[1] = ball_val[i][10]; // y方向 初期加速度
+		ball[i].acc[2] = ball_val[i][11]; // z方向 初期加速度
+
+		ball[i].col[0] = ball_val[i][12]; // 色 R
+		ball[i].col[1] = ball_val[i][13]; // 色 G
+		ball[i].col[2] = ball_val[i][14]; // 色 B
+		ball[i].col[3] = ball_val[i][15]; // 色 A
+	}
+}
 
 void BALL::idle() {
 	glutPostRedisplay();
@@ -106,7 +104,19 @@ void BALL::display() {
 
 	File_output();  // ファイルに球の位置や速度などを出力
 
-	for (int i = 0; i < ball_num; i++) {
+	// ボール同士が衝突した時の処理
+	for (int i = 0; i < ball.size() - 1; i++) {
+		double x = ball[i + 1].pos[0] - ball[i].pos[0];
+		double y = ball[i + 1].pos[1] - ball[i].pos[1];
+
+		double overlap = (ball[i].r + ball[i + 1].r) - sqrt(pow(x, 2) + pow(y, 2));
+
+		if (overlap > 0) {
+			cout << "collision detected!" << endl;
+		}
+	}
+
+	for (int i = 0; i < ball.size(); i++) {
 		double vel = sqrt(ball[i].vel[0] * ball[i].vel[0] + ball[i].vel[1] * ball[i].vel[1]);
 		if (vel <= v_min) {
 			ball[i].vel[0] = 0.0;
@@ -130,7 +140,7 @@ void BALL::display() {
 			ball[i].acc[1] = mu_d * g;
 		}
 
-		// ボールが衝突した時の処理
+		// ボールが壁に衝突した時の処理
 		if (ball[i].pos[0] + ball[i].r >= table_w / 2) {  // 右の壁
 			ball[i].pos[0] = table_w / 2 - ball[i].r;
 			ball[i].vel[0] = -1 * mu_r * ball[i].vel[0];
@@ -148,7 +158,7 @@ void BALL::display() {
 			ball[i].pos[1] = -table_h / 2 + ball[i].r;
 			ball[i].vel[1] = -1 * mu_r * ball[i].vel[1];
 		}
-
+	
 		ball[i].vel[0] += ball[i].acc[0] * dt;
 		ball[i].vel[1] += ball[i].acc[1] * dt;
 		ball[i].vel[2] += ball[i].acc[2] * dt;
@@ -218,7 +228,7 @@ void BALL::make_billiards_wall() {
 
 // 球体描画
 void BALL::make_balls() {
-	for (int i = 0; i < ball_num; i++) {
+	for (int i = 0; i < ball.size(); i++) {
 		glPushMatrix();
 		{
 			glTranslated(ball[i].pos[0], ball[i].pos[1], ball[i].pos[2]);  // 物体の位置
@@ -229,30 +239,48 @@ void BALL::make_balls() {
 	}
 }
 
-// ファイルからボールの初期値を読み込んでvector型変数に格納する静的メンバ関数
-void BALL::Set_ball_val() {
-	count_line = 10;
+// ファイルの行数をカウントするメンバ関数
+void BALL::data_count() {
+	string filename_input = "input_2ball.txt"; // 入力ファイル名
 
-	ball_val.resize(count_line);
-	for (int i = 0; i < count_line; i++) {
-		ball_val[i].resize(16);
+	// ファイルを開く
+	fin.open(filename_input.c_str());
+	if (!fin.is_open()) {
+		cout << "fin error" << endl;
 	}
+
+	string line;
+	while (!fin.eof() && !fin.fail()) {
+		getline(fin, line);
+		count_line++;
+	}
+	fin.close();
+}
+
+// ファイルからボールの初期値を読み込んでvector型変数に格納する静的メンバ関数
+void BALL::File_input() {
+	ball_val = vector<vector<double>>(count_line, vector<double>(16, 0));
 
 	while (!fin.eof() && !fin.fail()) {
-		for (int i = 0; i < count_line; i++) {
-			for (int j = 0; i < 16; j++) {
-				fin >> ball_val[i][j];
-			}
-		}
-	}
+		double a[16];
+		static int j = 0;
 
+		fin >> a[0] >> a[1] >> a[2] >> a[3] >> a[4] >> a[5]
+			>> a[6] >> a[7] >> a[8] >> a[9] >> a[10] >> a[11]
+			>> a[12] >> a[13] >> a[14] >> a[15];
+
+		for (int i = 0; i < 16; i++) {
+			ball_val[j][i] = a[i];
+		}
+		j++;
+	}
 	fin.close();
 }
 
 void BALL::File_output() {
 	double dt_sum = BALL::loopcounter * BALL::dt;
 
-	for (int i = 0; i < ball_num; i++) {
+	for (int i = 0; i < ball.size(); i++) {
 		// 状態更新・・・画面とファイルに出力
 		/*
 		cout << setw(8) << dt_sum << " " <<

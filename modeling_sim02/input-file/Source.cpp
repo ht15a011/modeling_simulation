@@ -9,7 +9,7 @@ ifstream fin;
 
 int main()
 {
-	string filename_input = "./input.txt"; // 入力ファイル名
+	string filename_input = "input.txt"; // 入力ファイル名
 	int count_line = 10;
 	vector< vector<double> > ball_val;
 
@@ -24,18 +24,17 @@ int main()
 	}
 
 	while (!fin.eof() && !fin.fail()) {
-		vector<double> in;
 		double a[16];
+		static int j = 0;
 
 		fin >> a[0] >> a[1] >> a[2] >> a[3] >> a[4] >> a[5]
 			>> a[6] >> a[7] >> a[8] >> a[9] >> a[10] >> a[11]
 			>> a[12] >> a[13] >> a[14] >> a[15];
 
 		for (int i = 0; i < 16; i++) {
-			in.push_back(a[i]);
+			ball_val[j][i] = a[i];
 		}
-
-		ball_val.push_back(in);
+		j++;
 	}
 	
 	for (int i = 0; i < count_line; i++) {
