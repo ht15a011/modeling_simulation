@@ -10,41 +10,41 @@
 #include "class.h"
 using namespace std;
 
-//const int ball_num = 10;
-//extern BALL ball[ball_num];
 extern vector<BALL> ball;
 extern ofstream fout;
 extern ifstream fin;
 vector< vector<double> > ball_val;
 
-BALL::BALL(){}
+// コンストラクター
+BALL::BALL() {}
 
+// デストラクター
 BALL::~BALL() {}
 
 void BALL::Set_ball() {
+	ball.resize(count_line);
+
 	for (int i = 0; i < count_line; i++) {
-		for (int j = 0; j < 16; j++) {
-			ball[i].m = ball_val[i][j]; // [g]
-			ball[i].r = ball_val[i][j]; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
-			ball[i].e = ball_val[i][j];
+		ball[i].m = ball_val[i][0]; // [g]
+		ball[i].r = ball_val[i][1]; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
+		ball[i].e = ball_val[i][2];
 
-			ball[i].col[0] = ball_val[i][j]; // 色 R
-			ball[i].col[1] = ball_val[i][j]; // 色 G
-			ball[i].col[2] = ball_val[i][j]; // 色 B
-			ball[i].col[3] = ball_val[i][j]; // 色 A
+		ball[i].pos[0] = ball_val[i][3]; // x座標 初期位置
+		ball[i].pos[1] = ball_val[i][4]; // y座標 初期位置
+		ball[i].pos[2] = ball_val[i][5]; // z座標 初期位置
 
-			ball[i].pos[0] = ball_val[i][j]; // x座標 初期位置
-			ball[i].pos[1] = ball_val[i][j]; // y座標 初期位置
-			ball[i].pos[2] = ball_val[i][j]; // z座標 初期位置
+		ball[i].vel[0] = ball_val[i][6]; // x方向 初期速度
+		ball[i].vel[1] = ball_val[i][7]; // y方向 初期速度
+		ball[i].vel[2] = ball_val[i][8];   // z方向 初期速度
 
-			ball[i].vel[0] = ball_val[i][j]; // x方向 初期速度
-			ball[i].vel[1] = ball_val[i][j]; // y方向 初期速度
-			ball[i].vel[2] = ball_val[i][j];   // z方向 初期速度
+		ball[i].acc[0] = ball_val[i][9]; // x方向 初期加速度
+		ball[i].acc[1] = ball_val[i][10]; // y方向 初期加速度
+		ball[i].acc[2] = ball_val[i][11]; // z方向 初期加速度
 
-			ball[i].acc[0] = ball_val[i][j]; // x方向 初期加速度
-			ball[i].acc[1] = ball_val[i][j]; // y方向 初期加速度
-			ball[i].acc[2] = ball_val[i][j]; // z方向 初期加速度
-		}
+		ball[i].col[0] = ball_val[i][12]; // 色 R
+		ball[i].col[1] = ball_val[i][13]; // 色 G
+		ball[i].col[2] = ball_val[i][14]; // 色 B
+		ball[i].col[3] = ball_val[i][15]; // 色 A
 	}
 }
 
@@ -104,6 +104,29 @@ void BALL::display() {
 
 	File_output();  // ファイルに球の位置や速度などを出力
 
+	// ボール同士が衝突した時の処理
+	for (int i = 0; i < ball.size(); i++) {
+		for (int j = i + 1; j < ball.size(); j++) {
+			double x = ball[j].pos[0] - ball[i].pos[0];
+			double y = ball[j].pos[1] - ball[i].pos[1];
+
+			double overlap = (ball[i].r + ball[j].r) - sqrt(pow(x, 2) + pow(y, 2));
+
+			if (overlap > 0) {
+				cout << "collision" << endl;
+				/*
+				double a = atan2(y, x);  // 衝突角度の計算
+				cout << a * 180 / M_PI << endl;
+
+				ball[i].pos[0] = -fabs(overlap / 2)*cos(a);
+				ball[i].pos[1] = -fabs(overlap / 2)*sin(a);
+				ball[j].pos[0] = fabs(overlap / 2)*cos(a);
+				ball[j].pos[1] = fabs(overlap / 2)*sin(a);
+				*/
+			}
+		}
+	}
+
 	for (int i = 0; i < ball.size(); i++) {
 		double vel = sqrt(ball[i].vel[0] * ball[i].vel[0] + ball[i].vel[1] * ball[i].vel[1]);
 		if (vel <= v_min) {
@@ -112,7 +135,7 @@ void BALL::display() {
 			ball[i].acc[0] = 0.0;
 			ball[i].acc[1] = 0.0;
 		}
-
+		
 		// 動摩擦力の実装
 		if (ball[i].vel[0] > 0) {  // x方向
 			ball[i].acc[0] = -mu_d * g;
@@ -127,8 +150,8 @@ void BALL::display() {
 		else if (0 > ball[i].vel[1]) {
 			ball[i].acc[1] = mu_d * g;
 		}
-
-		// ボールが衝突した時の処理
+		
+		// ボールが壁に衝突した時の処理
 		if (ball[i].pos[0] + ball[i].r >= table_w / 2) {  // 右の壁
 			ball[i].pos[0] = table_w / 2 - ball[i].r;
 			ball[i].vel[0] = -1 * mu_r * ball[i].vel[0];
@@ -227,16 +250,24 @@ void BALL::make_balls() {
 	}
 }
 
-// ファイルからボールの初期値を読み込んでvector型変数に格納する静的メンバ関数
-void BALL::Input_file() {
+// ファイルの行数をカウントするメンバ関数
+void BALL::data_count(string filename) {
+											   // ファイルを開く
+	fin.open(filename.c_str());
+	if (!fin.is_open()) {
+		cout << "fin error" << endl;
+	}
 
 	string line;
 	while (!fin.eof() && !fin.fail()) {
 		getline(fin, line);
 		count_line++;
 	}
+	fin.close();
+}
 
-	ball.resize(count_line);
+// ファイルからボールの初期値を読み込んでvector型変数に格納する静的メンバ関数
+void BALL::File_input() {
 	ball_val = vector<vector<double>>(count_line, vector<double>(16, 0));
 
 	while (!fin.eof() && !fin.fail()) {
@@ -252,7 +283,7 @@ void BALL::Input_file() {
 		}
 		j++;
 	}
-
+	fin.close();
 }
 
 void BALL::File_output() {
@@ -260,6 +291,19 @@ void BALL::File_output() {
 
 	for (int i = 0; i < ball.size(); i++) {
 		// 状態更新・・・画面とファイルに出力
+		/*
+		cout << setw(8) << dt_sum << " " <<
+		setw(8) << ball[i].pos[0] << " " <<
+		setw(8) << ball[i].pos[1] << " " <<
+		setw(8) << ball[i].pos[2] << " " <<
+		setw(8) << ball[i].vel[0] << " " <<
+		setw(8) << ball[i].vel[1] << " " <<
+		setw(8) << ball[i].vel[2] << " " <<
+		setw(8) << ball[i].acc[0] << " " <<
+		setw(8) << ball[i].acc[1] << " " <<
+		setw(8) << ball[i].acc[2] << " " <<
+		endl;
+		*/
 		fout << setw(8) << dt_sum << " " <<
 			setw(8) << ball[i].pos[0] << " " <<
 			setw(8) << ball[i].pos[1] << " " <<

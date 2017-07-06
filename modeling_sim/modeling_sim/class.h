@@ -23,7 +23,7 @@ public:
 	BALL();
 	~BALL();
 	static void Set_ball();
-	static void Input_file();
+	static void data_count(std::string);
 	static void init();
 	static void idle();
 	static void resize(int, int);
@@ -31,6 +31,7 @@ public:
 	static void display();
 	static void make_billiards_wall();
 	static void make_balls();
+	static void File_input();
 	static void File_output();
 };
 

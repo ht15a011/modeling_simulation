@@ -20,8 +20,6 @@ const double BALL::g = 980.7;
 const double BALL::mu_d = 0.01;
 const double BALL::v_min = 0.1;
 
-//const int ball_num = 10;
-//BALL ball[ball_num];
 vector<BALL> ball;
 ofstream fout;
 ifstream fin;
@@ -34,21 +32,23 @@ int main(int argc, char *argv[]) {
 	glutInitWindowSize(800, 600);  // ディスプレイ画面の作成
 	glutCreateWindow("simulation");
 
-	string filename_input = "input.txt"; // 入力ファイル名
-
-	fin.open(filename_input.c_str());  // ファイルを開く
+	string filename_input = "input_2ball.txt"; // 入力ファイル名
+	BALL::data_count(filename_input);  // ファイルの行数をカウント
+											   // ファイルを開く
+	fin.open(filename_input.c_str());
 	if (!fin.is_open()) {
 		cout << "fin error" << endl;
 		cin.get();
 		return -1;
 	}
 
-	BALL::Input_file();
+	BALL::File_input();  // ファイルのデータをvector型コンテナに入れる
+
 	fin.close();  // ファイルを閉じる
 
-	BALL::Set_ball();
+	BALL::Set_ball();  // 球の初期値を設定
 
-	// ファイルに出力
+					   // ファイルに出力
 	string filename_output = "output.txt";
 	fout.open(filename_output);
 

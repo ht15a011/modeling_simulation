@@ -7,6 +7,10 @@ private:
 	double r;      // 半径
 	double e;      // 弾性係数
 	float col[4];  // 色
+	double pos[3];  // 位置
+	double vel[3];  // 速度
+	double acc[3];  // 加速度
+	static int count_line;  // ファイルの行数
 	static long int loopcounter;  // ループ時間
 	static const double mu_r;     // 反発係数
 	static const double dt;       // 単位は[sec]．この値は各自のPCのスペックに合わせて調整する．
@@ -16,14 +20,10 @@ private:
 	static const double mu_d;     // 動摩擦係数
 	static const double v_min;	  // 速度の閾値
 public:
-	double pos[3];  // 位置
-	double vel[3];  // 速度
-	double acc[3];  // 加速度
-	static int count_line;
 	BALL();
 	~BALL();
 	static void Set_ball();
-	static void data_count();
+	static void data_count(std::string);
 	static void init();
 	static void idle();
 	static void resize(int, int);

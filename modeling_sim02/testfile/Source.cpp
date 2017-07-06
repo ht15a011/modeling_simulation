@@ -32,11 +32,11 @@ int main(int argc, char *argv[]) {
 	glutInitWindowSize(800, 600);  // ディスプレイ画面の作成
 	glutCreateWindow("simulation");
 
-	BALL::data_count();  // ファイルの行数をカウント
+	string filename_input = "input_4ball.txt"; // 入力ファイル
+	
+	BALL::data_count(filename_input);
 
-	string filename_input = "input_2ball.txt"; // 入力ファイル名
-	// ファイルを開く
-	fin.open(filename_input.c_str());
+	fin.open(filename_input.c_str());  // ファイルを開く
 	if (!fin.is_open()) {
 		cout << "fin error" << endl;
 		cin.get();

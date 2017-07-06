@@ -105,17 +105,25 @@ void BALL::display() {
 	File_output();  // ファイルに球の位置や速度などを出力
 
 	// ボール同士が衝突した時の処理
-	for (int i = 0; i < ball.size() - 1; i++) {
-		double x = ball[i + 1].pos[0] - ball[i].pos[0];
-		double y = ball[i + 1].pos[1] - ball[i].pos[1];
+	/*
+	for (int i = 0; i < ball.size(); i++) {
+		for (int j = i + 1; j < ball.size(); j++) {
+			double x = ball[j].pos[0] - ball[i].pos[0];
+			double y = ball[j].pos[1] - ball[i].pos[1];
+			
+			double overlap = (ball[i].r + ball[j].r) - sqrt(pow(x, 2) + pow(y, 2));
 
-		double overlap = (ball[i].r + ball[i + 1].r) - sqrt(pow(x, 2) + pow(y, 2));
+			if (overlap > 0) {
+				double a = atan2(y, x);  // 衝突角度の計算
 
-		if (overlap > 0) {
-			cout << "collision detected!" << endl;
+				ball[i].pos[0] = -fabs(overlap / 2)*cos(a);
+				ball[i].pos[1] = -fabs(overlap / 2)*sin(a);
+				ball[j].pos[0] = fabs(overlap / 2)*cos(a);
+				ball[j].pos[1] = fabs(overlap / 2)*sin(a);
+			}
 		}
 	}
-
+	*/
 	for (int i = 0; i < ball.size(); i++) {
 		double vel = sqrt(ball[i].vel[0] * ball[i].vel[0] + ball[i].vel[1] * ball[i].vel[1]);
 		if (vel <= v_min) {
@@ -140,6 +148,42 @@ void BALL::display() {
 			ball[i].acc[1] = mu_d * g;
 		}
 
+		// ボール同士の衝突の処理
+		for (int j = i + 1; j < ball.size(); j++) {
+			double x = ball[j].pos[0] - ball[i].pos[0];
+			double y = ball[j].pos[1] - ball[i].pos[1];
+
+			double overlap = (ball[i].r + ball[j].r) - sqrt(pow(x, 2) + pow(y, 2));
+
+			if (overlap > 0) {
+				double a = atan2(y, x);  // 衝突角度の計算
+
+				double Vaxa = ball[i].vel[0] * cos(a) + ball[i].vel[1] * sin(a);
+				double Vaya = -1 * ball[i].vel[0] * sin(a) + ball[i].vel[1] * cos(a);
+
+				double Vbxa = ball[j].vel[0] * cos(a) + ball[j].vel[1] * sin(a);
+				double Vbya = -1 * ball[j].vel[0] * sin(a) + ball[j].vel[1] * cos(a);
+
+				if (ball[i].m == ball[j].m) {
+					double temp;
+					temp = Vaxa; Vaxa = Vbxa; Vbxa = temp;
+				}
+				else {
+					Vaxa = ((ball[i].m - ball[j].m)*Vaxa + 2 * ball[j].m*Vbxa) / (ball[i].m + ball[j].m);
+					Vbxa = (2 * ball[i].m*Vaxa + (ball[j].m - ball[i].m)*Vbxa) / (ball[i].m + ball[j].m);
+				}
+				ball[i].vel[0] = Vaxa*cos(a) - Vaya*sin(a);
+				ball[i].vel[1] = Vaxa*sin(a) + Vaya*cos(a);
+				ball[i].pos[0] = -fabs(overlap / 2)*cos(a);
+				ball[i].pos[1] = -fabs(overlap / 2)*sin(a);
+
+				ball[j].vel[0] = Vbxa*cos(a) - Vbya*sin(a);
+				ball[j].vel[1] = Vbxa*sin(a) + Vbya*cos(a);
+				ball[j].pos[0] = fabs(overlap / 2)*cos(a);
+				ball[j].pos[1] = fabs(overlap / 2)*sin(a);
+			}
+		}
+
 		// ボールが壁に衝突した時の処理
 		if (ball[i].pos[0] + ball[i].r >= table_w / 2) {  // 右の壁
 			ball[i].pos[0] = table_w / 2 - ball[i].r;
@@ -158,7 +202,7 @@ void BALL::display() {
 			ball[i].pos[1] = -table_h / 2 + ball[i].r;
 			ball[i].vel[1] = -1 * mu_r * ball[i].vel[1];
 		}
-	
+
 		ball[i].vel[0] += ball[i].acc[0] * dt;
 		ball[i].vel[1] += ball[i].acc[1] * dt;
 		ball[i].vel[2] += ball[i].acc[2] * dt;
@@ -240,11 +284,11 @@ void BALL::make_balls() {
 }
 
 // ファイルの行数をカウントするメンバ関数
-void BALL::data_count() {
-	string filename_input = "input_2ball.txt"; // 入力ファイル名
+void BALL::data_count(string filename) {
+	//string filename_input = "input_4ball.txt"; // 入力ファイル名
 
 	// ファイルを開く
-	fin.open(filename_input.c_str());
+	fin.open(filename.c_str());
 	if (!fin.is_open()) {
 		cout << "fin error" << endl;
 	}
