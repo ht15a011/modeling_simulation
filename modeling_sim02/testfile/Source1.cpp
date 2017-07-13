@@ -22,9 +22,9 @@ BALL::BALL() {}
 BALL::~BALL() {}
 
 void BALL::Set_ball() {
-	ball.resize(count_line);
+	ball.resize(ball_val.size());
 
-	for (int i = 0; i < count_line; i++) {
+	for (int i = 0; i < ball_val.size(); i++) {
 		ball[i].m = ball_val[i][0]; // [g]
 		ball[i].r = ball_val[i][1]; // [cm] 球体の大きさ ball.r = 120.71 / 2; // [cm] 球体の大きさ
 		ball[i].e = ball_val[i][2];
@@ -97,14 +97,15 @@ void BALL::display() {
 		0.0, 0.0, 0.0,   // 視点目標位置 、どこを見るか目標を決める（x軸、y軸、z軸）
 		0.0, 1.0, 0.0);  // 上方向ベクトル 、視点の向き（x軸、y軸、z軸）
 
-						 // ビリヤード台の壁の描く
-	make_billiards_wall();
-	make_balls();
+	make_billiards_wall();  // ビリヤード台の壁の描く
+	make_balls();			// 球を描く
 	glutSwapBuffers();
 
 	File_output();  // ファイルに球の位置や速度などを出力
 
 	for (int i = 0; i < ball.size(); i++) {
+
+		// 停止処理
 		double vel = sqrt(ball[i].vel[0] * ball[i].vel[0] + ball[i].vel[1] * ball[i].vel[1]);
 		if (vel <= v_min) {
 			ball[i].vel[0] = 0.0;
@@ -256,7 +257,7 @@ void BALL::make_billiards_wall() {
 	glPopMatrix();
 }
 
-// 球体描画
+// 球体描画する静的メンバ関数
 void BALL::make_balls() {
 	for (int i = 0; i < ball.size(); i++) {
 		glPushMatrix();
@@ -269,42 +270,28 @@ void BALL::make_balls() {
 	}
 }
 
-// ファイルの行数をカウントするメンバ関数
-void BALL::data_count(string filename) {
-	//string filename_input = "input_4ball.txt"; // 入力ファイル名
-
-	// ファイルを開く
-	fin.open(filename.c_str());
-	if (!fin.is_open()) {
-		cout << "fin error" << endl;
-	}
-
-	string line;
-	while (!fin.eof() && !fin.fail()) {
-		getline(fin, line);
-		count_line++;
-	}
-	fin.close();
-}
-
 // ファイルからボールの初期値を読み込んでvector型変数に格納する静的メンバ関数
 void BALL::File_input() {
-	ball_val = vector<vector<double>>(count_line, vector<double>(16, 0));
-
 	while (!fin.eof() && !fin.fail()) {
 		double a[16];
-		static int j = 0;
+		vector<double> in;
 
 		fin >> a[0] >> a[1] >> a[2] >> a[3] >> a[4] >> a[5]
 			>> a[6] >> a[7] >> a[8] >> a[9] >> a[10] >> a[11]
 			>> a[12] >> a[13] >> a[14] >> a[15];
 
-		for (int i = 0; i < 16; i++) {
-			ball_val[j][i] = a[i];
+		for (int i = 0; i < sizeof(a)/sizeof(a[0]); i++) {
+			in.push_back(a[i]);
 		}
-		j++;
+		ball_val.push_back(in);
+		/*
+		for (int i = 0; i < ball_val.size(); i++) {
+			for (int j = 0; j < sizeof(a) / sizeof(a[0]); j++) {
+				cout << ball_val[i][j] << "," << endl;
+			}
+		}
+		*/
 	}
-	fin.close();
 }
 
 void BALL::File_output() {

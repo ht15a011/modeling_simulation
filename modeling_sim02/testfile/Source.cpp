@@ -33,8 +33,6 @@ int main(int argc, char *argv[]) {
 	glutCreateWindow("simulation");
 
 	string filename_input = "input_2ball.txt"; // 入力ファイル
-	
-	BALL::data_count(filename_input);
 
 	fin.open(filename_input.c_str());  // ファイルを開く
 	if (!fin.is_open()) {
@@ -44,7 +42,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	BALL::File_input();  // ファイルのデータをvector型コンテナに入れる
-	
 	fin.close();  // ファイルを閉じる
 
 	BALL::Set_ball();  // 球の初期値を設定

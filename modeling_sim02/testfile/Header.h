@@ -23,7 +23,6 @@ public:
 	BALL();
 	~BALL();
 	static void Set_ball();
-	static void data_count(std::string);
 	static void init();
 	static void idle();
 	static void resize(int, int);
