@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	glutInitWindowSize(800, 600);  // ディスプレイ画面の作成
 	glutCreateWindow("simulation");
 
-	string filename_input = "input_4ball.txt"; // 入力ファイル
+	string filename_input = "input_2ball.txt"; // 入力ファイル
 	
 	BALL::data_count(filename_input);
 
