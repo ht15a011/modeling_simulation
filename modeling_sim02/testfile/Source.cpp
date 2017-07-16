@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	BALL::File_input();  // ファイルのデータをvector型コンテナに入れる
+	BALL::File_input();  // ファイルにある球の初期値を読み込む
 	fin.close();  // ファイルを閉じる
 
 	BALL::Set_ball();  // 球の初期値を設定

@@ -22,16 +22,21 @@ private:
 public:
 	BALL();
 	~BALL();
-	static void Set_ball();
+	static void Set_ball();  // 球の初期値を設定する静的メンバ関数
 	static void init();
 	static void idle();
 	static void resize(int, int);
 	static void keyboard(unsigned char, int, int);
+	static void motion(int x, int y);
 	static void display();
-	static void make_billiards_wall();
-	static void make_balls();
-	static void File_input();
-	static void File_output();
+	static void make_billiards_wall();  // ビリヤード台の壁を描く静的メンバ関数
+	static void make_balls();			// 球を描く静的メンバ関数
+	static void File_input();			// ファイルから球の初期値を読み込む静的メンバ関数
+	static void File_output();			// ファイルに球の位置や速度などを出力する静的メンバ関数
+	static void ball_stop(int);			// 球の停止処理を行う静的メンバ関数
+	static void floor_friction(int);	// 動摩擦力を計算する静的メンバ関数
+	static void collision_ball(int);	// 球同士の衝突処理をする静的メンバ関数
+	static void collision_wall(int);	// 球が壁に衝突した時の処理をする静的メンバ関数
 };
 
 #endif // HEADER_H_
