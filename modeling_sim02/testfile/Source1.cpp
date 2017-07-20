@@ -115,7 +115,12 @@ void BALL::display() {
 // ビリヤード台の壁を描く静的メンバ関数
 void BALL::make_billiards_wall() {
 	const double height = 20.0;
-
+	/*
+	glPushMatrix();
+	{
+		gluCylinder();
+	}
+	*/
 	// 右の壁
 	glPushMatrix();
 	{

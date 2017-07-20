@@ -10,15 +10,14 @@
 #include "class.h"
 using namespace std;
 
-int BALL::count_line = 0;
-long int BALL::loopcounter = 0;
-const double BALL::mu_r = 0.9;
-const double BALL::dt = 0.0022;
-const double BALL::table_w = 254;
-const double BALL::table_h = 127;
-const double BALL::g = 980.7;
-const double BALL::mu_d = 0.01;
-const double BALL::v_min = 0.1;
+long int BALL::loopcounter = 0;    // ループ時間
+const double BALL::mu_r = 0.9;     // 反発係数
+const double BALL::dt = 0.0022;    // ループ時間
+const double BALL::table_w = 254;  // ビリヤード台の横幅
+const double BALL::table_h = 127;  // ビリヤード台の高さ
+const double BALL::g = 980.7;      // 重力加速度
+const double BALL::mu_d = 0.01;    // 動摩擦係数
+const double BALL::v_min = 0.1;    // 速度の閾値
 
 vector<BALL> ball;
 ofstream fout;
@@ -32,23 +31,21 @@ int main(int argc, char *argv[]) {
 	glutInitWindowSize(800, 600);  // ディスプレイ画面の作成
 	glutCreateWindow("simulation");
 
-	string filename_input = "input_4ball.txt"; // 入力ファイル名
-	BALL::data_count(filename_input);  // ファイルの行数をカウント
-											   // ファイルを開く
-	fin.open(filename_input.c_str());
+	string filename_input = "input_2ball.txt"; // 入力ファイル
+
+	fin.open(filename_input.c_str());  // ファイルを開く
 	if (!fin.is_open()) {
 		cout << "fin error" << endl;
 		cin.get();
 		return -1;
 	}
 
-	BALL::File_input();  // ファイルのデータをvector型コンテナに入れる
-
+	BALL::File_input();  // ファイルにある球の初期値を読み込む
 	fin.close();  // ファイルを閉じる
 
 	BALL::Set_ball();  // 球の初期値を設定
 
-					   // ファイルに出力
+	// ファイルに出力
 	string filename_output = "output.txt";
 	fout.open(filename_output);
 
