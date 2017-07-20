@@ -1,6 +1,8 @@
 #ifndef CLASS_H_
 #define CLASS_H_
 
+#include <vector>
+
 class BALL {
 private:
 	double m;      // 質量
@@ -18,6 +20,7 @@ private:
 	static const double g;	      // 重力加速度 [cm/s^2]
 	static const double mu_d;     // 動摩擦係数
 	static const double v_min;	  // 速度の閾値
+	static std::vector< std::vector<double> > ball_val;  // 球の初期値を格納するvector型コンテナ
 public:
 	BALL();
 	~BALL();

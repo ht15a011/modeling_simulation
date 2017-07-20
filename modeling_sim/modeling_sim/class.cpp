@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
-#include <Windows.h>
 #include <GL/freeglut.h>
 #include "class.h"
 using namespace std;
@@ -14,7 +13,6 @@ using namespace std;
 extern vector<BALL> ball;
 extern ofstream fout;
 extern ifstream fin;
-vector< vector<double> > ball_val;
 
 // コンストラクター
 BALL::BALL() {}
@@ -22,6 +20,7 @@ BALL::BALL() {}
 // デストラクター
 BALL::~BALL() {}
 
+// 球の初期値を設定する静的メンバ関数
 void BALL::Set_ball() {
 	ball.resize(ball_val.size());
 

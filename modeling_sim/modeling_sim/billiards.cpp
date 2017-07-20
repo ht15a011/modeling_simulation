@@ -18,6 +18,7 @@ const double BALL::table_h = 127;  // ビリヤード台の高さ
 const double BALL::g = 980.7;      // 重力加速度
 const double BALL::mu_d = 0.01;    // 動摩擦係数
 const double BALL::v_min = 0.1;    // 速度の閾値
+vector< vector<double> > BALL::ball_val;  // 球の初期値を格納するvector型コンテナ
 
 vector<BALL> ball;
 ofstream fout;
