@@ -31,7 +31,7 @@ void BALL::Set_ball() {
 
 		ball[i].pos[0] = ball_val[i][3]; // x座標 初期位置
 		ball[i].pos[1] = ball_val[i][4]; // y座標 初期位置
-		ball[i].pos[2] = ball[i].r; // z座標 初期位置
+		ball[i].pos[2] = ball_val[i][5]; // z座標 初期位置
 
 		ball[i].vel[0] = ball_val[i][6]; // x方向 初期速度
 		ball[i].vel[1] = ball_val[i][7]; // y方向 初期速度

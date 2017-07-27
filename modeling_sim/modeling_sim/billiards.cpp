@@ -16,7 +16,7 @@ const double BALL::dt = 0.0022;    // ループ時間
 const double BALL::table_w = 254;  // ビリヤード台の横幅
 const double BALL::table_h = 127;  // ビリヤード台の高さ
 const double BALL::g = 980.7;      // 重力加速度
-const double BALL::mu_d = 0.01;    // 動摩擦係数
+const double BALL::mu_d = 0.0;    // 動摩擦係数
 const double BALL::v_min = 0.1;    // 速度の閾値
 vector< vector<double> > BALL::ball_val;  // 球の初期値を格納するvector型コンテナ
 
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 	BALL::Set_ball();  // 球の初期値を設定
 
 	// ファイルに出力
-	string filename_output = "output.txt";
+	string filename_output = "output2.txt";
 	fout.open(filename_output);
 
 	//出力形式の調整 (小数点以下の3ケタに調整)
